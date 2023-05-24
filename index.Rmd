@@ -1,0 +1,55 @@
+--- 
+title: "Life2 Code Compendium"
+author: "Derek McCrae Norton"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+---
+
+```{r color, echo = FALSE, results='asis'}
+# crayon needs to be explicitly activated in Rmd
+options(crayon.enabled = TRUE)
+# Hooks needs to be set to deal with outputs
+# thanks to fansi logic
+old_hooks <- fansi::set_knit_hooks(knitr::knit_hooks, 
+                                   which = c("output", "message", "error"))
+```
+
+# Introduction {#intro}
+
+This document is intended to catalog and document all of the code for Life2 as well as how to use it.
+
+## Locations
+
+All code is currently versioned using SVN and can be found here:
+
+Solution     | Location
+------------ | --------
+GBA          | http://06eyrad:81/svn/GBA
+St Francis   | http://06eyrad:81/svn/st_francis
+HL7          | http://06eyrad:81/svn/HL7
+stac         | http://06eyrad:81/svn/stac
+
+
+## General notes
+
+- Currently Imidex does development in Eclipse using StatET. `.project` files are for that and not RStudio.
+- 
+
+
+## Bookdown Info
+
+Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
+
+To compile this example to PDF, you need XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.org/tinytex/>.
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

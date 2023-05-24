@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 HL7 | Life2 Code Compendium</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 HL7 | Life2 Code Compendium" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 HL7 | Life2 Code Compendium" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Derek McCrae Norton" />
+
+
+<meta name="date" content="2021-05-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="stfrancis.html"/>
+<link rel="next" href="stac.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Life2 Code Compendium</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#locations"><i class="fa fa-check"></i><b>1.1</b> Locations</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#general-notes"><i class="fa fa-check"></i><b>1.2</b> General notes</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#bookdown-info"><i class="fa fa-check"></i><b>1.3</b> Bookdown Info</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="gba.html"><a href="gba.html"><i class="fa fa-check"></i><b>2</b> Georgia Bankers Association</a><ul>
+<li class="chapter" data-level="2.1" data-path="gba.html"><a href="gba.html#notes-questions"><i class="fa fa-check"></i><b>2.1</b> Notes / Questions</a></li>
+<li class="chapter" data-level="2.2" data-path="gba.html"><a href="gba.html#project-structure"><i class="fa fa-check"></i><b>2.2</b> Project Structure</a></li>
+<li class="chapter" data-level="2.3" data-path="gba.html"><a href="gba.html#ini-file"><i class="fa fa-check"></i><b>2.3</b> <code>.ini</code> File</a></li>
+<li class="chapter" data-level="2.4" data-path="gba.html"><a href="gba.html#r-code"><i class="fa fa-check"></i><b>2.4</b> <code>R</code> Code</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="gba.html"><a href="gba.html#r"><i class="fa fa-check"></i><b>2.4.1</b> <code>/R</code></a><ul>
+<li class="chapter" data-level="2.4.1.1" data-path="gba.html"><a href="gba.html#main.r"><i class="fa fa-check"></i><b>2.4.1.1</b> <code>main.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.2" data-path="gba.html"><a href="gba.html#rmodel"><i class="fa fa-check"></i><b>2.4.2</b> <code>/R/model</code></a><ul>
+<li class="chapter" data-level="2.4.2.1" data-path="gba.html"><a href="gba.html#build.r"><i class="fa fa-check"></i><b>2.4.2.1</b> <code>build.R</code></a></li>
+<li class="chapter" data-level="2.4.2.2" data-path="gba.html"><a href="gba.html#correlate.r"><i class="fa fa-check"></i><b>2.4.2.2</b> <code>correlate.R</code></a></li>
+<li class="chapter" data-level="2.4.2.3" data-path="gba.html"><a href="gba.html#model_helper.r"><i class="fa fa-check"></i><b>2.4.2.3</b> <code>model_helper.R</code></a></li>
+<li class="chapter" data-level="2.4.2.4" data-path="gba.html"><a href="gba.html#version_mgmt.r"><i class="fa fa-check"></i><b>2.4.2.4</b> <code>version_mgmt.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.3" data-path="gba.html"><a href="gba.html#rarch"><i class="fa fa-check"></i><b>2.4.3</b> <code>/R/arch</code></a><ul>
+<li class="chapter" data-level="2.4.3.1" data-path="gba.html"><a href="gba.html#data_importing.r"><i class="fa fa-check"></i><b>2.4.3.1</b> <code>data_importing.R</code></a></li>
+<li class="chapter" data-level="2.4.3.2" data-path="gba.html"><a href="gba.html#development.r"><i class="fa fa-check"></i><b>2.4.3.2</b> <code>development.R</code></a></li>
+<li class="chapter" data-level="2.4.3.3" data-path="gba.html"><a href="gba.html#logging.r"><i class="fa fa-check"></i><b>2.4.3.3</b> <code>logging.R</code></a></li>
+<li class="chapter" data-level="2.4.3.4" data-path="gba.html"><a href="gba.html#prediction.r"><i class="fa fa-check"></i><b>2.4.3.4</b> <code>prediction.R</code></a></li>
+<li class="chapter" data-level="2.4.3.5" data-path="gba.html"><a href="gba.html#preprocessing.r"><i class="fa fa-check"></i><b>2.4.3.5</b> <code>preprocessing.R</code></a></li>
+<li class="chapter" data-level="2.4.3.6" data-path="gba.html"><a href="gba.html#production.r"><i class="fa fa-check"></i><b>2.4.3.6</b> <code>production.R</code></a></li>
+<li class="chapter" data-level="2.4.3.7" data-path="gba.html"><a href="gba.html#setup_prod.r"><i class="fa fa-check"></i><b>2.4.3.7</b> <code>setup_prod.R</code></a></li>
+<li class="chapter" data-level="2.4.3.8" data-path="gba.html"><a href="gba.html#setup_r.r"><i class="fa fa-check"></i><b>2.4.3.8</b> <code>setup_R.R</code></a></li>
+<li class="chapter" data-level="2.4.3.9" data-path="gba.html"><a href="gba.html#utilities.r"><i class="fa fa-check"></i><b>2.4.3.9</b> <code>utilities.R</code></a></li>
+<li class="chapter" data-level="2.4.3.10" data-path="gba.html"><a href="gba.html#variable_handling.r"><i class="fa fa-check"></i><b>2.4.3.10</b> <code>variable_handling.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.4" data-path="gba.html"><a href="gba.html#rpreprocessors"><i class="fa fa-check"></i><b>2.4.4</b> <code>/R/preprocessors</code></a><ul>
+<li class="chapter" data-level="2.4.4.1" data-path="gba.html"><a href="gba.html#pp_dv.r"><i class="fa fa-check"></i><b>2.4.4.1</b> <code>pp_dv.R</code></a></li>
+<li class="chapter" data-level="2.4.4.2" data-path="gba.html"><a href="gba.html#pp_iv_case_mgmt.r"><i class="fa fa-check"></i><b>2.4.4.2</b> <code>pp_iv_case_mgmt.R</code></a></li>
+<li class="chapter" data-level="2.4.4.3" data-path="gba.html"><a href="gba.html#pp_iv_dental_claim.r"><i class="fa fa-check"></i><b>2.4.4.3</b> <code>pp_iv_dental_claim.R</code></a></li>
+<li class="chapter" data-level="2.4.4.4" data-path="gba.html"><a href="gba.html#pp_iv_eligibility.r"><i class="fa fa-check"></i><b>2.4.4.4</b> <code>pp_iv_eligibility.R</code></a></li>
+<li class="chapter" data-level="2.4.4.5" data-path="gba.html"><a href="gba.html#pp_iv_experian.r"><i class="fa fa-check"></i><b>2.4.4.5</b> <code>pp_iv_experian.R</code></a></li>
+<li class="chapter" data-level="2.4.4.6" data-path="gba.html"><a href="gba.html#pp_iv_med_claim.r"><i class="fa fa-check"></i><b>2.4.4.6</b> <code>pp_iv_med_claim.R</code></a></li>
+<li class="chapter" data-level="2.4.4.7" data-path="gba.html"><a href="gba.html#pp_iv_precert.r"><i class="fa fa-check"></i><b>2.4.4.7</b> <code>pp_iv_precert.R</code></a></li>
+<li class="chapter" data-level="2.4.4.8" data-path="gba.html"><a href="gba.html#pp_iv_provider.r"><i class="fa fa-check"></i><b>2.4.4.8</b> <code>pp_iv_provider.R</code></a></li>
+<li class="chapter" data-level="2.4.4.9" data-path="gba.html"><a href="gba.html#pp_iv_rx.r"><i class="fa fa-check"></i><b>2.4.4.9</b> <code>pp_iv_rx.R</code></a></li>
+<li class="chapter" data-level="2.4.4.10" data-path="gba.html"><a href="gba.html#pp_iv_temporal.r"><i class="fa fa-check"></i><b>2.4.4.10</b> <code>pp_iv_temporal.R</code></a></li>
+<li class="chapter" data-level="2.4.4.11" data-path="gba.html"><a href="gba.html#pp_iv_wellview.r"><i class="fa fa-check"></i><b>2.4.4.11</b> <code>pp_iv_wellview.R</code></a></li>
+<li class="chapter" data-level="2.4.4.12" data-path="gba.html"><a href="gba.html#pp_util.r"><i class="fa fa-check"></i><b>2.4.4.12</b> <code>pp_util.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.5" data-path="gba.html"><a href="gba.html#rreporting"><i class="fa fa-check"></i><b>2.4.5</b> <code>/R/reporting</code></a><ul>
+<li class="chapter" data-level="2.4.5.1" data-path="gba.html"><a href="gba.html#data_reporting.r"><i class="fa fa-check"></i><b>2.4.5.1</b> <code>data_reporting.R</code></a></li>
+<li class="chapter" data-level="2.4.5.2" data-path="gba.html"><a href="gba.html#leakage_reporting.r"><i class="fa fa-check"></i><b>2.4.5.2</b> <code>leakage_reporting.R</code></a></li>
+<li class="chapter" data-level="2.4.5.3" data-path="gba.html"><a href="gba.html#mrr_reporting.r"><i class="fa fa-check"></i><b>2.4.5.3</b> <code>mrr_reporting.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.6" data-path="gba.html"><a href="gba.html#rdata"><i class="fa fa-check"></i><b>2.4.6</b> <code>/R/data</code></a><ul>
+<li class="chapter" data-level="2.4.6.1" data-path="gba.html"><a href="gba.html#dental_claim_factory.r"><i class="fa fa-check"></i><b>2.4.6.1</b> <code>dental_claim_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.2" data-path="gba.html"><a href="gba.html#diabetes_factory.r"><i class="fa fa-check"></i><b>2.4.6.2</b> <code>diabetes_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.3" data-path="gba.html"><a href="gba.html#eligibility_factory.r"><i class="fa fa-check"></i><b>2.4.6.3</b> <code>eligibility_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.4" data-path="gba.html"><a href="gba.html#experian_factory.r"><i class="fa fa-check"></i><b>2.4.6.4</b> <code>experian_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.5" data-path="gba.html"><a href="gba.html#leakage_patterns_factory.r"><i class="fa fa-check"></i><b>2.4.6.5</b> <code>leakage_patterns_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.6" data-path="gba.html"><a href="gba.html#leakage_patterns_modifier_factory.r"><i class="fa fa-check"></i><b>2.4.6.6</b> <code>leakage_patterns_modifier_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.7" data-path="gba.html"><a href="gba.html#leakage_patterns_provider_watchlist_factory.r"><i class="fa fa-check"></i><b>2.4.6.7</b> <code>leakage_patterns_provider_watchlist_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.8" data-path="gba.html"><a href="gba.html#leakage_patterns_rx_factory.r"><i class="fa fa-check"></i><b>2.4.6.8</b> <code>leakage_patterns_rx_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.9" data-path="gba.html"><a href="gba.html#leakage_reference_factory.r"><i class="fa fa-check"></i><b>2.4.6.9</b> <code>leakage_reference_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.10" data-path="gba.html"><a href="gba.html#leakage_utilities_factory.r"><i class="fa fa-check"></i><b>2.4.6.10</b> <code>leakage_utilities_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.11" data-path="gba.html"><a href="gba.html#med_claim_factory.r"><i class="fa fa-check"></i><b>2.4.6.11</b> <code>med_claim_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.12" data-path="gba.html"><a href="gba.html#rx_factory.r"><i class="fa fa-check"></i><b>2.4.6.12</b> <code>rx_factory.R</code></a></li>
+<li class="chapter" data-level="2.4.6.13" data-path="gba.html"><a href="gba.html#web_factory.r"><i class="fa fa-check"></i><b>2.4.6.13</b> <code>web_factory.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.7" data-path="gba.html"><a href="gba.html#rrules"><i class="fa fa-check"></i><b>2.4.7</b> <code>/R/rules</code></a><ul>
+<li class="chapter" data-level="2.4.7.1" data-path="gba.html"><a href="gba.html#rl_inputs.r"><i class="fa fa-check"></i><b>2.4.7.1</b> <code>rl_inputs.R</code></a></li>
+<li class="chapter" data-level="2.4.7.2" data-path="gba.html"><a href="gba.html#rl_run.r"><i class="fa fa-check"></i><b>2.4.7.2</b> <code>rl_run.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.8" data-path="gba.html"><a href="gba.html#rrulesdefs"><i class="fa fa-check"></i><b>2.4.8</b> <code>/R/rules/defs</code></a><ul>
+<li class="chapter" data-level="2.4.8.1" data-path="gba.html"><a href="gba.html#referral_rule_defs.r"><i class="fa fa-check"></i><b>2.4.8.1</b> <code>referral_rule_defs.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.9" data-path="gba.html"><a href="gba.html#rvalidate"><i class="fa fa-check"></i><b>2.4.9</b> <code>/R/validate</code></a><ul>
+<li class="chapter" data-level="2.4.9.1" data-path="gba.html"><a href="gba.html#med_claim_validate.r"><i class="fa fa-check"></i><b>2.4.9.1</b> <code>med_claim_validate.R</code></a></li>
+<li class="chapter" data-level="2.4.9.2" data-path="gba.html"><a href="gba.html#rx_claim_validate.r"><i class="fa fa-check"></i><b>2.4.9.2</b> <code>rx_claim_validate.R</code></a></li>
+<li class="chapter" data-level="2.4.9.3" data-path="gba.html"><a href="gba.html#validate_test_defs.r"><i class="fa fa-check"></i><b>2.4.9.3</b> <code>validate_test_defs.R</code></a></li>
+<li class="chapter" data-level="2.4.9.4" data-path="gba.html"><a href="gba.html#validate_util.r"><i class="fa fa-check"></i><b>2.4.9.4</b> <code>validate_util.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.10" data-path="gba.html"><a href="gba.html#rdao"><i class="fa fa-check"></i><b>2.4.10</b> <code>/R/dao</code></a><ul>
+<li class="chapter" data-level="2.4.10.1" data-path="gba.html"><a href="gba.html#area_stats_dao.r"><i class="fa fa-check"></i><b>2.4.10.1</b> <code>area_stats_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.2" data-path="gba.html"><a href="gba.html#case_mgmt_dao.r"><i class="fa fa-check"></i><b>2.4.10.2</b> <code>case_mgmt_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.3" data-path="gba.html"><a href="gba.html#census_dao.r"><i class="fa fa-check"></i><b>2.4.10.3</b> <code>census_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.4" data-path="gba.html"><a href="gba.html#coding_dao.r"><i class="fa fa-check"></i><b>2.4.10.4</b> <code>coding_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.5" data-path="gba.html"><a href="gba.html#dao_db_util.r"><i class="fa fa-check"></i><b>2.4.10.5</b> <code>dao_db_util.R</code></a></li>
+<li class="chapter" data-level="2.4.10.6" data-path="gba.html"><a href="gba.html#dao_format_util.r"><i class="fa fa-check"></i><b>2.4.10.6</b> <code>dao_format_util.R</code></a></li>
+<li class="chapter" data-level="2.4.10.7" data-path="gba.html"><a href="gba.html#dao_import_util.r"><i class="fa fa-check"></i><b>2.4.10.7</b> <code>dao_import_util.R</code></a></li>
+<li class="chapter" data-level="2.4.10.8" data-path="gba.html"><a href="gba.html#dao_util.r"><i class="fa fa-check"></i><b>2.4.10.8</b> <code>dao_util.R</code></a></li>
+<li class="chapter" data-level="2.4.10.9" data-path="gba.html"><a href="gba.html#eligibility_dao.r"><i class="fa fa-check"></i><b>2.4.10.9</b> <code>eligibility_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.10" data-path="gba.html"><a href="gba.html#experian_dao.r"><i class="fa fa-check"></i><b>2.4.10.10</b> <code>experian_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.11" data-path="gba.html"><a href="gba.html#med_claim_dao.r"><i class="fa fa-check"></i><b>2.4.10.11</b> <code>med_claim_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.12" data-path="gba.html"><a href="gba.html#plan_types_dao.r"><i class="fa fa-check"></i><b>2.4.10.12</b> <code>plan_types_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.13" data-path="gba.html"><a href="gba.html#precert_dao.r"><i class="fa fa-check"></i><b>2.4.10.13</b> <code>precert_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.14" data-path="gba.html"><a href="gba.html#production_dao.r"><i class="fa fa-check"></i><b>2.4.10.14</b> <code>production_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.15" data-path="gba.html"><a href="gba.html#provider_watch_dao.r"><i class="fa fa-check"></i><b>2.4.10.15</b> <code>provider_watch_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.16" data-path="gba.html"><a href="gba.html#rx_claim_dao.r"><i class="fa fa-check"></i><b>2.4.10.16</b> <code>rx_claim_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.17" data-path="gba.html"><a href="gba.html#web_dao.r"><i class="fa fa-check"></i><b>2.4.10.17</b> <code>web_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.18" data-path="gba.html"><a href="gba.html#wellview_dao.r"><i class="fa fa-check"></i><b>2.4.10.18</b> <code>wellview_dao.R</code></a></li>
+<li class="chapter" data-level="2.4.10.19" data-path="gba.html"><a href="gba.html#who_flu_dao.r"><i class="fa fa-check"></i><b>2.4.10.19</b> <code>who_flu_dao.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.11" data-path="gba.html"><a href="gba.html#rmain.r---creates-a-number-of-high-level-functions-used-to-invoke-lower-level-functions"><i class="fa fa-check"></i><b>2.4.11</b> <code>/R/main.R</code> - Creates a number of high level functions used to invoke lower level functions</a></li>
+<li class="chapter" data-level="2.4.12" data-path="gba.html"><a href="gba.html#rmodel---functions-for-creating-the-models"><i class="fa fa-check"></i><b>2.4.12</b> <code>R/model/</code> - Functions for creating the models</a></li>
+<li class="chapter" data-level="2.4.13" data-path="gba.html"><a href="gba.html#rarchsetup_r.r"><i class="fa fa-check"></i><b>2.4.13</b> <code>R/arch/setup_R.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="gba.html"><a href="gba.html#usage"><i class="fa fa-check"></i><b>2.5</b> Usage</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="gba.html"><a href="gba.html#preprocess-log"><i class="fa fa-check"></i><b>2.5.1</b> Preprocess Log</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="stfrancis.html"><a href="stfrancis.html"><i class="fa fa-check"></i><b>3</b> St Francis</a><ul>
+<li class="chapter" data-level="3.1" data-path="stfrancis.html"><a href="stfrancis.html#project-structure-1"><i class="fa fa-check"></i><b>3.1</b> Project Structure</a></li>
+<li class="chapter" data-level="3.2" data-path="stfrancis.html"><a href="stfrancis.html#notes-questions-1"><i class="fa fa-check"></i><b>3.2</b> Notes / Questions</a></li>
+<li class="chapter" data-level="3.3" data-path="stfrancis.html"><a href="stfrancis.html#r-code-1"><i class="fa fa-check"></i><b>3.3</b> <code>R</code> Code</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="stfrancis.html"><a href="stfrancis.html#r-1"><i class="fa fa-check"></i><b>3.3.1</b> <code>/r</code></a><ul>
+<li class="chapter" data-level="3.3.1.1" data-path="stfrancis.html"><a href="stfrancis.html#inpatient_main.r"><i class="fa fa-check"></i><b>3.3.1.1</b> <code>inpatient_main.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.2" data-path="stfrancis.html"><a href="stfrancis.html#rdao-1"><i class="fa fa-check"></i><b>3.3.2</b> <code>/r/dao</code></a><ul>
+<li class="chapter" data-level="3.3.2.1" data-path="stfrancis.html"><a href="stfrancis.html#ahrq_dao.r"><i class="fa fa-check"></i><b>3.3.2.1</b> <code>AHRQ_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.2" data-path="stfrancis.html"><a href="stfrancis.html#dx_dao.r"><i class="fa fa-check"></i><b>3.3.2.2</b> <code>Dx_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.3" data-path="stfrancis.html"><a href="stfrancis.html#enc_dao.r"><i class="fa fa-check"></i><b>3.3.2.3</b> <code>Enc_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.4" data-path="stfrancis.html"><a href="stfrancis.html#lab_dao.r"><i class="fa fa-check"></i><b>3.3.2.4</b> <code>Lab_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.5" data-path="stfrancis.html"><a href="stfrancis.html#tx_dao.r"><i class="fa fa-check"></i><b>3.3.2.5</b> <code>Tx_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.6" data-path="stfrancis.html"><a href="stfrancis.html#vital_dao.r"><i class="fa fa-check"></i><b>3.3.2.6</b> <code>Vital_dao.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.3" data-path="stfrancis.html"><a href="stfrancis.html#rcommon"><i class="fa fa-check"></i><b>3.3.3</b> <code>/r/common</code></a><ul>
+<li class="chapter" data-level="3.3.3.1" data-path="stfrancis.html"><a href="stfrancis.html#build_sf_models.r"><i class="fa fa-check"></i><b>3.3.3.1</b> <code>build_sf_models.R</code></a></li>
+<li class="chapter" data-level="3.3.3.2" data-path="stfrancis.html"><a href="stfrancis.html#data_converters.r"><i class="fa fa-check"></i><b>3.3.3.2</b> <code>data_converters.R</code></a></li>
+<li class="chapter" data-level="3.3.3.3" data-path="stfrancis.html"><a href="stfrancis.html#database_access.r"><i class="fa fa-check"></i><b>3.3.3.3</b> <code>database_access.R</code></a></li>
+<li class="chapter" data-level="3.3.3.4" data-path="stfrancis.html"><a href="stfrancis.html#dedupe.r"><i class="fa fa-check"></i><b>3.3.3.4</b> <code>dedupe.R</code></a></li>
+<li class="chapter" data-level="3.3.3.5" data-path="stfrancis.html"><a href="stfrancis.html#load_sf.r"><i class="fa fa-check"></i><b>3.3.3.5</b> <code>load_sf.R</code></a></li>
+<li class="chapter" data-level="3.3.3.6" data-path="stfrancis.html"><a href="stfrancis.html#load_supplemental_data.r"><i class="fa fa-check"></i><b>3.3.3.6</b> <code>load_supplemental_data.R</code></a></li>
+<li class="chapter" data-level="3.3.3.7" data-path="stfrancis.html"><a href="stfrancis.html#run_common.r"><i class="fa fa-check"></i><b>3.3.3.7</b> <code>run_common.R</code></a></li>
+<li class="chapter" data-level="3.3.3.8" data-path="stfrancis.html"><a href="stfrancis.html#run_dev.r"><i class="fa fa-check"></i><b>3.3.3.8</b> <code>run_dev.R</code></a></li>
+<li class="chapter" data-level="3.3.3.9" data-path="stfrancis.html"><a href="stfrancis.html#run_prod.r"><i class="fa fa-check"></i><b>3.3.3.9</b> <code>run_prod.R</code></a></li>
+<li class="chapter" data-level="3.3.3.10" data-path="stfrancis.html"><a href="stfrancis.html#setup_prod.r-1"><i class="fa fa-check"></i><b>3.3.3.10</b> <code>setup_prod.R</code></a></li>
+<li class="chapter" data-level="3.3.3.11" data-path="stfrancis.html"><a href="stfrancis.html#shared_functions.r"><i class="fa fa-check"></i><b>3.3.3.11</b> <code>shared_functions.R</code></a></li>
+<li class="chapter" data-level="3.3.3.12" data-path="stfrancis.html"><a href="stfrancis.html#utils.r"><i class="fa fa-check"></i><b>3.3.3.12</b> <code>utils.R</code></a></li>
+<li class="chapter" data-level="3.3.3.13" data-path="stfrancis.html"><a href="stfrancis.html#validate_prod.r"><i class="fa fa-check"></i><b>3.3.3.13</b> <code>validate_prod.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.4" data-path="stfrancis.html"><a href="stfrancis.html#rrules-1"><i class="fa fa-check"></i><b>3.3.4</b> <code>/r/rules</code></a><ul>
+<li class="chapter" data-level="3.3.4.1" data-path="stfrancis.html"><a href="stfrancis.html#build_rules_inputs.r"><i class="fa fa-check"></i><b>3.3.4.1</b> <code>build_rules_inputs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.2" data-path="stfrancis.html"><a href="stfrancis.html#case_mgr_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.2</b> <code>case_mgr_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.3" data-path="stfrancis.html"><a href="stfrancis.html#infectious_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.3</b> <code>infectious_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.4" data-path="stfrancis.html"><a href="stfrancis.html#pne_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.4</b> <code>pne_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.5" data-path="stfrancis.html"><a href="stfrancis.html#run_rules.r"><i class="fa fa-check"></i><b>3.3.4.5</b> <code>run_rules.R</code></a></li>
+<li class="chapter" data-level="3.3.4.6" data-path="stfrancis.html"><a href="stfrancis.html#sepsis_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.6</b> <code>sepsis_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.7" data-path="stfrancis.html"><a href="stfrancis.html#uti_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.7</b> <code>uti_rule_defs.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.5" data-path="stfrancis.html"><a href="stfrancis.html#rbuild_dataset"><i class="fa fa-check"></i><b>3.3.5</b> <code>/r/build_dataset</code></a><ul>
+<li class="chapter" data-level="3.3.5.1" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_actions.r"><i class="fa fa-check"></i><b>3.3.5.1</b> <code>build_x_dataset_actions.R</code></a></li>
+<li class="chapter" data-level="3.3.5.2" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_admission.r"><i class="fa fa-check"></i><b>3.3.5.2</b> <code>build_x_dataset_admission.R</code></a></li>
+<li class="chapter" data-level="3.3.5.3" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_anci.r"><i class="fa fa-check"></i><b>3.3.5.3</b> <code>build_x_dataset_ANCI.R</code></a></li>
+<li class="chapter" data-level="3.3.5.4" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_charts.r"><i class="fa fa-check"></i><b>3.3.5.4</b> <code>build_x_dataset_charts.R</code></a></li>
+<li class="chapter" data-level="3.3.5.5" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_cultures.r"><i class="fa fa-check"></i><b>3.3.5.5</b> <code>build_x_dataset_cultures.R</code></a></li>
+<li class="chapter" data-level="3.3.5.6" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_discharge.r"><i class="fa fa-check"></i><b>3.3.5.6</b> <code>build_x_dataset_discharge.R</code></a></li>
+<li class="chapter" data-level="3.3.5.7" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_dx.r"><i class="fa fa-check"></i><b>3.3.5.7</b> <code>build_x_dataset_dx.R</code></a></li>
+<li class="chapter" data-level="3.3.5.8" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_ecin.r"><i class="fa fa-check"></i><b>3.3.5.8</b> <code>build_x_dataset_ECIN.R</code></a></li>
+<li class="chapter" data-level="3.3.5.9" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_encounters.r"><i class="fa fa-check"></i><b>3.3.5.9</b> <code>build_x_dataset_encounters.R</code></a></li>
+<li class="chapter" data-level="3.3.5.10" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_flowsheet.r"><i class="fa fa-check"></i><b>3.3.5.10</b> <code>build_x_dataset_flowsheet.R</code></a></li>
+<li class="chapter" data-level="3.3.5.11" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_hac.r"><i class="fa fa-check"></i><b>3.3.5.11</b> <code>build_x_dataset_hac.R</code></a></li>
+<li class="chapter" data-level="3.3.5.12" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_hed.r"><i class="fa fa-check"></i><b>3.3.5.12</b> <code>build_x_dataset_HED.R</code></a></li>
+<li class="chapter" data-level="3.3.5.13" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_location.r"><i class="fa fa-check"></i><b>3.3.5.13</b> <code>build_x_dataset_location.R</code></a></li>
+<li class="chapter" data-level="3.3.5.14" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_medrec.r"><i class="fa fa-check"></i><b>3.3.5.14</b> <code>build_x_dataset_medrec.R</code></a></li>
+<li class="chapter" data-level="3.3.5.15" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_orders.r"><i class="fa fa-check"></i><b>3.3.5.15</b> <code>build_x_dataset_orders.R</code></a></li>
+<li class="chapter" data-level="3.3.5.16" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_patient.r"><i class="fa fa-check"></i><b>3.3.5.16</b> <code>build_x_dataset_patient.R</code></a></li>
+<li class="chapter" data-level="3.3.5.17" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_payor.r"><i class="fa fa-check"></i><b>3.3.5.17</b> <code>build_x_dataset_payor.R</code></a></li>
+<li class="chapter" data-level="3.3.5.18" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_physician.r"><i class="fa fa-check"></i><b>3.3.5.18</b> <code>build_x_dataset_physician.R</code></a></li>
+<li class="chapter" data-level="3.3.5.19" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_post_acute.r"><i class="fa fa-check"></i><b>3.3.5.19</b> <code>build_x_dataset_post_acute.R</code></a></li>
+<li class="chapter" data-level="3.3.5.20" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_prc.r"><i class="fa fa-check"></i><b>3.3.5.20</b> <code>build_x_dataset_prc.R</code></a></li>
+<li class="chapter" data-level="3.3.5.21" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_probable_adm_reason.r"><i class="fa fa-check"></i><b>3.3.5.21</b> <code>build_x_dataset_probable_adm_reason.R</code></a></li>
+<li class="chapter" data-level="3.3.5.22" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_problems.r"><i class="fa fa-check"></i><b>3.3.5.22</b> <code>build_x_dataset_problems.R</code></a></li>
+<li class="chapter" data-level="3.3.5.23" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_ris.r"><i class="fa fa-check"></i><b>3.3.5.23</b> <code>build_x_dataset_ris.R</code></a></li>
+<li class="chapter" data-level="3.3.5.24" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_rx.r"><i class="fa fa-check"></i><b>3.3.5.24</b> <code>build_x_dataset_rx.R</code></a></li>
+<li class="chapter" data-level="3.3.5.25" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_scores.r"><i class="fa fa-check"></i><b>3.3.5.25</b> <code>build_x_dataset_scores.R</code></a></li>
+<li class="chapter" data-level="3.3.5.26" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_surgical.r"><i class="fa fa-check"></i><b>3.3.5.26</b> <code>build_x_dataset_surgical.R</code></a></li>
+<li class="chapter" data-level="3.3.5.27" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_time.r"><i class="fa fa-check"></i><b>3.3.5.27</b> <code>build_x_dataset_time.R</code></a></li>
+<li class="chapter" data-level="3.3.5.28" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_uber_text.r"><i class="fa fa-check"></i><b>3.3.5.28</b> <code>build_x_dataset_uber_text.R</code></a></li>
+<li class="chapter" data-level="3.3.5.29" data-path="stfrancis.html"><a href="stfrancis.html#build_y_dataset_gmlos.r"><i class="fa fa-check"></i><b>3.3.5.29</b> <code>build_y_dataset_gmlos.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.6" data-path="stfrancis.html"><a href="stfrancis.html#rreports"><i class="fa fa-check"></i><b>3.3.6</b> <code>/r/reports</code></a><ul>
+<li class="chapter" data-level="3.3.6.1" data-path="stfrancis.html"><a href="stfrancis.html#current_house_report.r"><i class="fa fa-check"></i><b>3.3.6.1</b> <code>current_house_report.R</code></a></li>
+<li class="chapter" data-level="3.3.6.2" data-path="stfrancis.html"><a href="stfrancis.html#get_star_schema_data.r"><i class="fa fa-check"></i><b>3.3.6.2</b> <code>get_star_schema_data.R</code></a></li>
+<li class="chapter" data-level="3.3.6.3" data-path="stfrancis.html"><a href="stfrancis.html#los_reports.r"><i class="fa fa-check"></i><b>3.3.6.3</b> <code>LOS_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.4" data-path="stfrancis.html"><a href="stfrancis.html#model_reports.r"><i class="fa fa-check"></i><b>3.3.6.4</b> <code>model_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.5" data-path="stfrancis.html"><a href="stfrancis.html#observation_reports.r"><i class="fa fa-check"></i><b>3.3.6.5</b> <code>observation_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.6" data-path="stfrancis.html"><a href="stfrancis.html#post_acute_reports.r"><i class="fa fa-check"></i><b>3.3.6.6</b> <code>post_acute_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.7" data-path="stfrancis.html"><a href="stfrancis.html#ranker.r"><i class="fa fa-check"></i><b>3.3.6.7</b> <code>ranker.R</code></a></li>
+<li class="chapter" data-level="3.3.6.8" data-path="stfrancis.html"><a href="stfrancis.html#readmission_reports.r"><i class="fa fa-check"></i><b>3.3.6.8</b> <code>readmission_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.9" data-path="stfrancis.html"><a href="stfrancis.html#report_data.r"><i class="fa fa-check"></i><b>3.3.6.9</b> <code>report_data.R</code></a></li>
+<li class="chapter" data-level="3.3.6.10" data-path="stfrancis.html"><a href="stfrancis.html#run_reports.r"><i class="fa fa-check"></i><b>3.3.6.10</b> <code>run_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.11" data-path="stfrancis.html"><a href="stfrancis.html#star_schema_sf.r"><i class="fa fa-check"></i><b>3.3.6.11</b> <code>star_schema_sf.R</code></a></li>
+<li class="chapter" data-level="3.3.6.12" data-path="stfrancis.html"><a href="stfrancis.html#suggested_action_reports.r"><i class="fa fa-check"></i><b>3.3.6.12</b> <code>suggested_action_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.13" data-path="stfrancis.html"><a href="stfrancis.html#unit_reports.r"><i class="fa fa-check"></i><b>3.3.6.13</b> <code>unit_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.14" data-path="stfrancis.html"><a href="stfrancis.html#user_reports.r"><i class="fa fa-check"></i><b>3.3.6.14</b> <code>user_reports.R</code></a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="hl7.html"><a href="hl7.html"><i class="fa fa-check"></i><b>4</b> HL7</a><ul>
+<li class="chapter" data-level="4.1" data-path="hl7.html"><a href="hl7.html#project-structure-2"><i class="fa fa-check"></i><b>4.1</b> Project Structure</a></li>
+<li class="chapter" data-level="4.2" data-path="hl7.html"><a href="hl7.html#notes-questions-2"><i class="fa fa-check"></i><b>4.2</b> Notes / Questions</a></li>
+<li class="chapter" data-level="4.3" data-path="hl7.html"><a href="hl7.html#r-code-2"><i class="fa fa-check"></i><b>4.3</b> <code>R</code> Code</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="hl7.html"><a href="hl7.html#r-2"><i class="fa fa-check"></i><b>4.3.1</b> <code>/r</code></a><ul>
+<li class="chapter" data-level="4.3.1.1" data-path="hl7.html"><a href="hl7.html#main.r-1"><i class="fa fa-check"></i><b>4.3.1.1</b> <code>main.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3.2" data-path="hl7.html"><a href="hl7.html#rconversion"><i class="fa fa-check"></i><b>4.3.2</b> <code>/r/conversion</code></a><ul>
+<li class="chapter" data-level="4.3.2.1" data-path="hl7.html"><a href="hl7.html#conversion_main.r"><i class="fa fa-check"></i><b>4.3.2.1</b> <code>conversion_main.R</code></a></li>
+<li class="chapter" data-level="4.3.2.2" data-path="hl7.html"><a href="hl7.html#create_factory.r"><i class="fa fa-check"></i><b>4.3.2.2</b> <code>create_factory.R</code></a></li>
+<li class="chapter" data-level="4.3.2.3" data-path="hl7.html"><a href="hl7.html#cultures_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.3</b> <code>cultures_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.4" data-path="hl7.html"><a href="hl7.html#encounters_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.4</b> <code>encounters_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.5" data-path="hl7.html"><a href="hl7.html#flowsheets_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.5</b> <code>flowsheets_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.6" data-path="hl7.html"><a href="hl7.html#labs_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.6</b> <code>labs_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.7" data-path="hl7.html"><a href="hl7.html#locations_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.7</b> <code>locations_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.8" data-path="hl7.html"><a href="hl7.html#orders_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.8</b> <code>orders_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.9" data-path="hl7.html"><a href="hl7.html#providers_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.9</b> <code>providers_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.10" data-path="hl7.html"><a href="hl7.html#radiology_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.10</b> <code>radiology_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.11" data-path="hl7.html"><a href="hl7.html#reference_factory.r"><i class="fa fa-check"></i><b>4.3.2.11</b> <code>reference_factory.R</code></a></li>
+<li class="chapter" data-level="4.3.2.12" data-path="hl7.html"><a href="hl7.html#rx_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.12</b> <code>rx_mckesson_to_redox.R</code></a></li>
+<li class="chapter" data-level="4.3.2.13" data-path="hl7.html"><a href="hl7.html#seed_data.r"><i class="fa fa-check"></i><b>4.3.2.13</b> <code>seed_data.R</code></a></li>
+<li class="chapter" data-level="4.3.2.14" data-path="hl7.html"><a href="hl7.html#update_factory.r"><i class="fa fa-check"></i><b>4.3.2.14</b> <code>update_factory.R</code></a></li>
+<li class="chapter" data-level="4.3.2.15" data-path="hl7.html"><a href="hl7.html#vitals_mckesson_to_redox.r"><i class="fa fa-check"></i><b>4.3.2.15</b> <code>vitals_mckesson_to_redox.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3.3" data-path="hl7.html"><a href="hl7.html#rdao-2"><i class="fa fa-check"></i><b>4.3.3</b> <code>/r/dao</code></a><ul>
+<li class="chapter" data-level="4.3.3.1" data-path="hl7.html"><a href="hl7.html#allergy_dao.r"><i class="fa fa-check"></i><b>4.3.3.1</b> <code>allergy_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.2" data-path="hl7.html"><a href="hl7.html#application_cache.r"><i class="fa fa-check"></i><b>4.3.3.2</b> <code>application_cache.R</code></a></li>
+<li class="chapter" data-level="4.3.3.3" data-path="hl7.html"><a href="hl7.html#culture_dao.r"><i class="fa fa-check"></i><b>4.3.3.3</b> <code>culture_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.4" data-path="hl7.html"><a href="hl7.html#development_dao.r"><i class="fa fa-check"></i><b>4.3.3.4</b> <code>development_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.5" data-path="hl7.html"><a href="hl7.html#diagnosis_doa.r"><i class="fa fa-check"></i><b>4.3.3.5</b> <code>diagnosis_doa.R</code></a></li>
+<li class="chapter" data-level="4.3.3.6" data-path="hl7.html"><a href="hl7.html#encounter_dao.r"><i class="fa fa-check"></i><b>4.3.3.6</b> <code>encounter_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.7" data-path="hl7.html"><a href="hl7.html#facility_dao.r"><i class="fa fa-check"></i><b>4.3.3.7</b> <code>facility_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.8" data-path="hl7.html"><a href="hl7.html#flowsheet_dao.r"><i class="fa fa-check"></i><b>4.3.3.8</b> <code>flowsheet_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.9" data-path="hl7.html"><a href="hl7.html#lab_dao.r-1"><i class="fa fa-check"></i><b>4.3.3.9</b> <code>lab_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.10" data-path="hl7.html"><a href="hl7.html#md_dao.r"><i class="fa fa-check"></i><b>4.3.3.10</b> <code>md_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.11" data-path="hl7.html"><a href="hl7.html#order_dao.r"><i class="fa fa-check"></i><b>4.3.3.11</b> <code>order_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.12" data-path="hl7.html"><a href="hl7.html#patient_dao.r"><i class="fa fa-check"></i><b>4.3.3.12</b> <code>patient_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.13" data-path="hl7.html"><a href="hl7.html#procedure_dao.r"><i class="fa fa-check"></i><b>4.3.3.13</b> <code>procedure_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.14" data-path="hl7.html"><a href="hl7.html#rad_dao.r"><i class="fa fa-check"></i><b>4.3.3.14</b> <code>rad_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.15" data-path="hl7.html"><a href="hl7.html#rx_dao.r"><i class="fa fa-check"></i><b>4.3.3.15</b> <code>rx_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.16" data-path="hl7.html"><a href="hl7.html#validate_dao.r"><i class="fa fa-check"></i><b>4.3.3.16</b> <code>validate_dao.R</code></a></li>
+<li class="chapter" data-level="4.3.3.17" data-path="hl7.html"><a href="hl7.html#vital_dao.r-1"><i class="fa fa-check"></i><b>4.3.3.17</b> <code>vital_dao.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.3.4" data-path="hl7.html"><a href="hl7.html#rreports-1"><i class="fa fa-check"></i><b>4.3.4</b> <code>/r/reports</code></a><ul>
+<li class="chapter" data-level="4.3.4.1" data-path="hl7.html"><a href="hl7.html#report_data.r-1"><i class="fa fa-check"></i><b>4.3.4.1</b> <code>report_data.R</code></a></li>
+<li class="chapter" data-level="4.3.4.2" data-path="hl7.html"><a href="hl7.html#star_schema_hl7.r"><i class="fa fa-check"></i><b>4.3.4.2</b> <code>star_schema_hl7.R</code></a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="stac.html"><a href="stac.html"><i class="fa fa-check"></i><b>5</b> stac</a><ul>
+<li class="chapter" data-level="5.1" data-path="stac.html"><a href="stac.html#project-structure-3"><i class="fa fa-check"></i><b>5.1</b> Project Structure</a></li>
+<li class="chapter" data-level="5.2" data-path="stac.html"><a href="stac.html#notes-questions-3"><i class="fa fa-check"></i><b>5.2</b> Notes / Questions</a></li>
+<li class="chapter" data-level="5.3" data-path="stac.html"><a href="stac.html#r-code-3"><i class="fa fa-check"></i><b>5.3</b> <code>R</code> Code</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="stac.html"><a href="stac.html#r-3"><i class="fa fa-check"></i><b>5.3.1</b> <code>/r</code></a><ul>
+<li class="chapter" data-level="5.3.1.1" data-path="stac.html"><a href="stac.html#stac_main.r"><i class="fa fa-check"></i><b>5.3.1.1</b> <code>STAC_main.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.2" data-path="stac.html"><a href="stac.html#rarch-1"><i class="fa fa-check"></i><b>5.3.2</b> <code>/r/arch</code></a><ul>
+<li class="chapter" data-level="5.3.2.1" data-path="stac.html"><a href="stac.html#development.r-1"><i class="fa fa-check"></i><b>5.3.2.1</b> <code>development.R</code></a></li>
+<li class="chapter" data-level="5.3.2.2" data-path="stac.html"><a href="stac.html#explainer.r"><i class="fa fa-check"></i><b>5.3.2.2</b> <code>explainer.R</code></a></li>
+<li class="chapter" data-level="5.3.2.3" data-path="stac.html"><a href="stac.html#logging.r-1"><i class="fa fa-check"></i><b>5.3.2.3</b> <code>logging.R</code></a></li>
+<li class="chapter" data-level="5.3.2.4" data-path="stac.html"><a href="stac.html#prediction.r-1"><i class="fa fa-check"></i><b>5.3.2.4</b> <code>prediction.R</code></a></li>
+<li class="chapter" data-level="5.3.2.5" data-path="stac.html"><a href="stac.html#preprocessing.r-1"><i class="fa fa-check"></i><b>5.3.2.5</b> <code>preprocessing.R</code></a></li>
+<li class="chapter" data-level="5.3.2.6" data-path="stac.html"><a href="stac.html#production.r-1"><i class="fa fa-check"></i><b>5.3.2.6</b> <code>production.R</code></a></li>
+<li class="chapter" data-level="5.3.2.7" data-path="stac.html"><a href="stac.html#setup_prod.r-2"><i class="fa fa-check"></i><b>5.3.2.7</b> <code>setup_prod.R</code></a></li>
+<li class="chapter" data-level="5.3.2.8" data-path="stac.html"><a href="stac.html#summary_validation.r"><i class="fa fa-check"></i><b>5.3.2.8</b> <code>summary_validation.R</code></a></li>
+<li class="chapter" data-level="5.3.2.9" data-path="stac.html"><a href="stac.html#utilities.r-1"><i class="fa fa-check"></i><b>5.3.2.9</b> <code>utilities.R</code></a></li>
+<li class="chapter" data-level="5.3.2.10" data-path="stac.html"><a href="stac.html#validate.r"><i class="fa fa-check"></i><b>5.3.2.10</b> <code>validate.R</code></a></li>
+<li class="chapter" data-level="5.3.2.11" data-path="stac.html"><a href="stac.html#variable_handling.r-1"><i class="fa fa-check"></i><b>5.3.2.11</b> <code>variable_handling.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.3" data-path="stac.html"><a href="stac.html#rbase_reports"><i class="fa fa-check"></i><b>5.3.3</b> <code>/r/base_reports</code></a><ul>
+<li class="chapter" data-level="5.3.3.1" data-path="stac.html"><a href="stac.html#base_aggregators.r"><i class="fa fa-check"></i><b>5.3.3.1</b> <code>base_aggregators.R</code></a></li>
+<li class="chapter" data-level="5.3.3.2" data-path="stac.html"><a href="stac.html#base_ranker.r"><i class="fa fa-check"></i><b>5.3.3.2</b> <code>base_ranker.R</code></a></li>
+<li class="chapter" data-level="5.3.3.3" data-path="stac.html"><a href="stac.html#base_star_schema.r"><i class="fa fa-check"></i><b>5.3.3.3</b> <code>base_star_schema.R</code></a></li>
+<li class="chapter" data-level="5.3.3.4" data-path="stac.html"><a href="stac.html#star_schema_factory.r"><i class="fa fa-check"></i><b>5.3.3.4</b> <code>star_schema_factory.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.4" data-path="stac.html"><a href="stac.html#rdata-1"><i class="fa fa-check"></i><b>5.3.4</b> <code>/r/data</code></a><ul>
+<li class="chapter" data-level="5.3.4.1" data-path="stac.html"><a href="stac.html#abx_prophylaxis.r"><i class="fa fa-check"></i><b>5.3.4.1</b> <code>abx_prophylaxis.R</code></a></li>
+<li class="chapter" data-level="5.3.4.2" data-path="stac.html"><a href="stac.html#ahrq_factory.r"><i class="fa fa-check"></i><b>5.3.4.2</b> <code>ahrq_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.3" data-path="stac.html"><a href="stac.html#allergy_factory.r"><i class="fa fa-check"></i><b>5.3.4.3</b> <code>allergy_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.4" data-path="stac.html"><a href="stac.html#ancillary_factory.r"><i class="fa fa-check"></i><b>5.3.4.4</b> <code>ancillary_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.5" data-path="stac.html"><a href="stac.html#assessment_factory.r"><i class="fa fa-check"></i><b>5.3.4.5</b> <code>assessment_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.6" data-path="stac.html"><a href="stac.html#cdiff_factory.r"><i class="fa fa-check"></i><b>5.3.4.6</b> <code>cdiff_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.7" data-path="stac.html"><a href="stac.html#contraindication_factory.r"><i class="fa fa-check"></i><b>5.3.4.7</b> <code>contraindication_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.8" data-path="stac.html"><a href="stac.html#dx_factory.r"><i class="fa fa-check"></i><b>5.3.4.8</b> <code>Dx_Factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.9" data-path="stac.html"><a href="stac.html#dx_lookups.r"><i class="fa fa-check"></i><b>5.3.4.9</b> <code>Dx_lookups.R</code></a></li>
+<li class="chapter" data-level="5.3.4.10" data-path="stac.html"><a href="stac.html#ed_factory.r"><i class="fa fa-check"></i><b>5.3.4.10</b> <code>ed_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.11" data-path="stac.html"><a href="stac.html#encounter_factory.r"><i class="fa fa-check"></i><b>5.3.4.11</b> <code>Encounter_Factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.12" data-path="stac.html"><a href="stac.html#flowsheet_factory.r"><i class="fa fa-check"></i><b>5.3.4.12</b> <code>flowsheet_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.13" data-path="stac.html"><a href="stac.html#hac_factory.r"><i class="fa fa-check"></i><b>5.3.4.13</b> <code>hac_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.14" data-path="stac.html"><a href="stac.html#infectious_disease_factory.r"><i class="fa fa-check"></i><b>5.3.4.14</b> <code>infectious_disease_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.15" data-path="stac.html"><a href="stac.html#labs_factory.r"><i class="fa fa-check"></i><b>5.3.4.15</b> <code>labs_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.16" data-path="stac.html"><a href="stac.html#load_stac.r"><i class="fa fa-check"></i><b>5.3.4.16</b> <code>load_stac.R</code></a></li>
+<li class="chapter" data-level="5.3.4.17" data-path="stac.html"><a href="stac.html#nlp_factory.r"><i class="fa fa-check"></i><b>5.3.4.17</b> <code>NLP_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.18" data-path="stac.html"><a href="stac.html#physician_factory.r"><i class="fa fa-check"></i><b>5.3.4.18</b> <code>physician_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.19" data-path="stac.html"><a href="stac.html#radiology_factory.r"><i class="fa fa-check"></i><b>5.3.4.19</b> <code>radiology_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.20" data-path="stac.html"><a href="stac.html#risk_factors_factory.r"><i class="fa fa-check"></i><b>5.3.4.20</b> <code>risk_factors_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.21" data-path="stac.html"><a href="stac.html#rx_factory.r-1"><i class="fa fa-check"></i><b>5.3.4.21</b> <code>Rx_Factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.22" data-path="stac.html"><a href="stac.html#score_factory.r"><i class="fa fa-check"></i><b>5.3.4.22</b> <code>score_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.23" data-path="stac.html"><a href="stac.html#sepsis_factory.r"><i class="fa fa-check"></i><b>5.3.4.23</b> <code>sepsis_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.24" data-path="stac.html"><a href="stac.html#sx_factory.r"><i class="fa fa-check"></i><b>5.3.4.24</b> <code>Sx_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.25" data-path="stac.html"><a href="stac.html#tx_factory.r"><i class="fa fa-check"></i><b>5.3.4.25</b> <code>Tx_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.26" data-path="stac.html"><a href="stac.html#tx_lookups.r"><i class="fa fa-check"></i><b>5.3.4.26</b> <code>Tx_lookups.R</code></a></li>
+<li class="chapter" data-level="5.3.4.27" data-path="stac.html"><a href="stac.html#uti_factory.r"><i class="fa fa-check"></i><b>5.3.4.27</b> <code>uti_factory.R</code></a></li>
+<li class="chapter" data-level="5.3.4.28" data-path="stac.html"><a href="stac.html#vitals_factory.r"><i class="fa fa-check"></i><b>5.3.4.28</b> <code>vitals_factory.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.5" data-path="stac.html"><a href="stac.html#rmodel-1"><i class="fa fa-check"></i><b>5.3.5</b> <code>/r/model</code></a><ul>
+<li class="chapter" data-level="5.3.5.1" data-path="stac.html"><a href="stac.html#build_models.r"><i class="fa fa-check"></i><b>5.3.5.1</b> <code>build_models.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.6" data-path="stac.html"><a href="stac.html#rpreprocessors-1"><i class="fa fa-check"></i><b>5.3.6</b> <code>/r/preprocessors</code></a><ul>
+<li class="chapter" data-level="5.3.6.1" data-path="stac.html"><a href="stac.html#pp_dv.r-1"><i class="fa fa-check"></i><b>5.3.6.1</b> <code>pp_dv.R</code></a></li>
+<li class="chapter" data-level="5.3.6.2" data-path="stac.html"><a href="stac.html#pp_iv_actions.r"><i class="fa fa-check"></i><b>5.3.6.2</b> <code>pp_iv_actions.R</code></a></li>
+<li class="chapter" data-level="5.3.6.3" data-path="stac.html"><a href="stac.html#pp_iv_admitting_diagnosis.r"><i class="fa fa-check"></i><b>5.3.6.3</b> <code>pp_iv_admitting_diagnosis.R</code></a></li>
+<li class="chapter" data-level="5.3.6.4" data-path="stac.html"><a href="stac.html#pp_iv_allergies.r"><i class="fa fa-check"></i><b>5.3.6.4</b> <code>pp_iv_allergies.R</code></a></li>
+<li class="chapter" data-level="5.3.6.5" data-path="stac.html"><a href="stac.html#pp_iv_cultures.r"><i class="fa fa-check"></i><b>5.3.6.5</b> <code>pp_iv_cultures.R</code></a></li>
+<li class="chapter" data-level="5.3.6.6" data-path="stac.html"><a href="stac.html#pp_iv_dx.r"><i class="fa fa-check"></i><b>5.3.6.6</b> <code>pp_iv_dx.R</code></a></li>
+<li class="chapter" data-level="5.3.6.7" data-path="stac.html"><a href="stac.html#pp_iv_encounters.r"><i class="fa fa-check"></i><b>5.3.6.7</b> <code>pp_iv_encounters.R</code></a></li>
+<li class="chapter" data-level="5.3.6.8" data-path="stac.html"><a href="stac.html#pp_iv_hac.r"><i class="fa fa-check"></i><b>5.3.6.8</b> <code>pp_iv_hac.R</code></a></li>
+<li class="chapter" data-level="5.3.6.9" data-path="stac.html"><a href="stac.html#pp_iv_labs.r"><i class="fa fa-check"></i><b>5.3.6.9</b> <code>pp_iv_labs.R</code></a></li>
+<li class="chapter" data-level="5.3.6.10" data-path="stac.html"><a href="stac.html#pp_iv_location.r"><i class="fa fa-check"></i><b>5.3.6.10</b> <code>pp_iv_location.R</code></a></li>
+<li class="chapter" data-level="5.3.6.11" data-path="stac.html"><a href="stac.html#pp_iv_orders.r"><i class="fa fa-check"></i><b>5.3.6.11</b> <code>pp_iv_orders.R</code></a></li>
+<li class="chapter" data-level="5.3.6.12" data-path="stac.html"><a href="stac.html#pp_iv_patient.r"><i class="fa fa-check"></i><b>5.3.6.12</b> <code>pp_iv_patient.R</code></a></li>
+<li class="chapter" data-level="5.3.6.13" data-path="stac.html"><a href="stac.html#pp_iv_prc.r"><i class="fa fa-check"></i><b>5.3.6.13</b> <code>pp_iv_prc.R</code></a></li>
+<li class="chapter" data-level="5.3.6.14" data-path="stac.html"><a href="stac.html#pp_iv_radiology.r"><i class="fa fa-check"></i><b>5.3.6.14</b> <code>pp_iv_radiology.R</code></a></li>
+<li class="chapter" data-level="5.3.6.15" data-path="stac.html"><a href="stac.html#pp_iv_rx.r-1"><i class="fa fa-check"></i><b>5.3.6.15</b> <code>pp_iv_rx.R</code></a></li>
+<li class="chapter" data-level="5.3.6.16" data-path="stac.html"><a href="stac.html#pp_iv_time.r"><i class="fa fa-check"></i><b>5.3.6.16</b> <code>pp_iv_time.R</code></a></li>
+<li class="chapter" data-level="5.3.6.17" data-path="stac.html"><a href="stac.html#pp_iv_vitals.r"><i class="fa fa-check"></i><b>5.3.6.17</b> <code>pp_iv_vitals.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.7" data-path="stac.html"><a href="stac.html#rrules-2"><i class="fa fa-check"></i><b>5.3.7</b> <code>/r/rules</code></a><ul>
+<li class="chapter" data-level="5.3.7.1" data-path="stac.html"><a href="stac.html#clinical_playbook_data.r"><i class="fa fa-check"></i><b>5.3.7.1</b> <code>clinical_playbook_data.R</code></a></li>
+<li class="chapter" data-level="5.3.7.2" data-path="stac.html"><a href="stac.html#rl_inputs.r-1"><i class="fa fa-check"></i><b>5.3.7.2</b> <code>rl_inputs.R</code></a></li>
+<li class="chapter" data-level="5.3.7.3" data-path="stac.html"><a href="stac.html#rl_run.r-1"><i class="fa fa-check"></i><b>5.3.7.3</b> <code>rl_run.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.8" data-path="stac.html"><a href="stac.html#rrulesdefs-1"><i class="fa fa-check"></i><b>5.3.8</b> <code>/r/rules/defs</code></a><ul>
+<li class="chapter" data-level="5.3.8.1" data-path="stac.html"><a href="stac.html#case_mgr_rule_defs.r-1"><i class="fa fa-check"></i><b>5.3.8.1</b> <code>case_mgr_rule_defs.R</code></a></li>
+<li class="chapter" data-level="5.3.8.2" data-path="stac.html"><a href="stac.html#infectious_rule_defs.r-1"><i class="fa fa-check"></i><b>5.3.8.2</b> <code>infectious_rule_defs.R</code></a></li>
+<li class="chapter" data-level="5.3.8.3" data-path="stac.html"><a href="stac.html#pne_rule_defs.r-1"><i class="fa fa-check"></i><b>5.3.8.3</b> <code>pne_rule_defs.R</code></a></li>
+<li class="chapter" data-level="5.3.8.4" data-path="stac.html"><a href="stac.html#sepsis_rule_defs.r-1"><i class="fa fa-check"></i><b>5.3.8.4</b> <code>sepsis_rule_defs.R</code></a></li>
+<li class="chapter" data-level="5.3.8.5" data-path="stac.html"><a href="stac.html#uti_rule_defs.r-1"><i class="fa fa-check"></i><b>5.3.8.5</b> <code>uti_rule_defs.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.9" data-path="stac.html"><a href="stac.html#rvalidate-1"><i class="fa fa-check"></i><b>5.3.9</b> <code>/r/validate</code></a><ul>
+<li class="chapter" data-level="5.3.9.1" data-path="stac.html"><a href="stac.html#validate_test_defs.r-1"><i class="fa fa-check"></i><b>5.3.9.1</b> <code>validate_test_defs.R</code></a></li>
+<li class="chapter" data-level="5.3.9.2" data-path="stac.html"><a href="stac.html#validate_util.r-1"><i class="fa fa-check"></i><b>5.3.9.2</b> <code>validate_util.R</code></a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Life2 Code Compendium</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="hl7" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> HL7</h1>
+<p>This document is intended to catalog and document all of the code for HL7 as well as how to use it.</p>
+<div id="project-structure-2" class="section level2">
+<h2><span class="header-section-number">4.1</span> Project Structure</h2>
+<PRE class="fansi fansi-output"><CODE><span style='color: #0000BB;font-weight: bold;'>C:/Users/Derek/Desktop/HL7</span><span>
++-- </span><span style='color: #0000BB;font-weight: bold;'>ini</span><span>
+|   +-- HL7_DEV.ini
+|   +-- HL7_DEV2_gm.ini
+|   +-- HL7_DEV2_gm2_tmp.ini
+|   +-- HL7_DEV_jg.ini
+|   +-- HL7_DEV_jg2.ini
+|   +-- HL7_PROD.ini
+|   \-- HL7_PROD_jg.ini
++-- </span><span style='color: #0000BB;font-weight: bold;'>r</span><span>
+|   +-- </span><span style='color: #0000BB;font-weight: bold;'>conversion</span><span>
+|   +-- </span><span style='color: #0000BB;font-weight: bold;'>dao</span><span>
+|   +-- </span><span style='color: #00BB00;'>main.R</span><span>
+|   +-- </span><span style='color: #0000BB;font-weight: bold;'>reports</span><span>
+|   \-- </span><span style='color: #0000BB;font-weight: bold;'>sandbox</span><span>
++-- </span><span style='color: #0000BB;font-weight: bold;'>resource</span><span>
+|   +-- abx_names_xref.xlsx
+|   +-- ANCI_value_decode.csv
+|   +-- cerner_mckesson_lab_mapping.xlsx
+|   +-- cerner_mckesson_lab_mapping_master.xlsx
+|   +-- Copy of Pharmacy Extracts for BSS (KA 8-24).xlsx
+|   +-- dc_referral_xwalk.csv
+|   +-- dc_referral_xwalk.xlsx
+|   +-- dim_table.csv
+|   +-- labs_vitals_names_xref.xlsx
+|   +-- labs_vitals_warn_error_pct_xref.xlsx
+|   +-- mckesson_lab_types.xlsx
+|   +-- measure_table.csv
+|   +-- pat_type_decode.csv
+|   +-- rare_result_names_file.RDS
+|   \-- SpecialtyCode_xref.csv
++-- </span><span style='color: #0000BB;font-weight: bold;'>sql</span><span>
+|   +-- redox-life2-ddl.sql
+|   +-- redox-life2-functions.sql
+|   +-- redox-life2-indexes.sql
+|   +-- redox-life2-views.sql
+|   \-- </span><span style='color: #0000BB;font-weight: bold;'>sandbox</span><span>
+\-- </span><span style='color: #0000BB;font-weight: bold;'>trunk</span><span>
+    +-- </span><span style='color: #0000BB;font-weight: bold;'>branches</span><span>
+    +-- </span><span style='color: #0000BB;font-weight: bold;'>tags</span><span>
+    \-- </span><span style='color: #0000BB;font-weight: bold;'>trunk</span><span>
+</span></CODE></PRE>
+</div>
+<div id="notes-questions-2" class="section level2">
+<h2><span class="header-section-number">4.2</span> Notes / Questions</h2>
+<ul>
+<li>Notes</li>
+<li>Questions</li>
+</ul>
+</div>
+<div id="r-code-2" class="section level2">
+<h2><span class="header-section-number">4.3</span> <code>R</code> Code</h2>
+<div id="r-2" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> <code>/r</code></h3>
+<div id="main.r-1" class="section level4">
+<h4><span class="header-section-number">4.3.1.1</span> <code>main.R</code></h4>
+<ul>
+<li><code>get_params()</code> - Configuration / Initialization settings to build the St Francis dataset and model</li>
+<li><code>connect_to_dbs()</code> -</li>
+<li><code>get_params_from_file()</code> - Loads the parameter object from an initialziation file.</li>
+<li><code>prompt_for_ini_location()</code> - Prompt the user for the location of their initialization file. Verifies the user input that the file exists.</li>
+<li><code>load_libraries()</code> -</li>
+<li><code>set_params_datetime()</code> - Function used to modify the date and time in the parameters object, used to determine the demarcation point where the data is truncated.</li>
+<li><code>set_working_directory()</code> - Function used to set the RDS directory on the params object, including locations to X and Y dataset files.</li>
+<li><code>setupLogging()</code> - Sets up the futile logger</li>
+<li><code>set_db_password()</code> - Set’s the database password in a secure keyring</li>
+<li><code>get_db_password()</code> - Get’s the database password in a secure keyring</li>
+</ul>
+</div>
+</div>
+<div id="rconversion" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> <code>/r/conversion</code></h3>
+<div id="conversion_main.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.1</span> <code>conversion_main.R</code></h4>
+<ul>
+<li><code>run_mckesson_to_redox_conversion()</code> -</li>
+<li><code>get_converters()</code> -</li>
+<li><code>run_conversion()</code> -</li>
+</ul>
+</div>
+<div id="create_factory.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.2</span> <code>create_factory.R</code></h4>
+<ul>
+<li><code>create_meta_records()</code> - Insert meta records into the raw database returns the corresponding MetaID’s that were created</li>
+<li><code>create_order_records()</code> -</li>
+<li><code>create_order_details_results_records()</code> -</li>
+<li><code>create_order_details_records()</code> -</li>
+<li><code>create_results_order_details_records()</code> -</li>
+<li><code>create_results_records()</code> -</li>
+<li><code>create_flowsheets_observations_records()</code> -</li>
+<li><code>create_rx_records()</code> -</li>
+<li><code>create_provider_records()</code> - Convert the mD master into the Redox data model</li>
+<li><code>create_provider_speciality_records()</code> - Creates provider specialty records</li>
+<li><code>create_provider_group_records()</code> -</li>
+<li><code>create_patient_records()</code> - Creates a patient record in the reox data model</li>
+<li><code>create_visit_records()</code> -</li>
+<li><code>create_pt_admin_record()</code> - Insert the patient admin records into the redox database</li>
+<li><code>create_diagnosis_records()</code> - The create_diagnosis_records function receives the old dx codes, converts them (via the map_old_dx_to_new_dx function) into new codes, and inserts the new values into the Diagnoses tables</li>
+<li><code>create_pt_diagnosis_records()</code> - We may not need to use this function for conversion</li>
+<li><code>create_visit_diagnosis_records()</code> - Create visit diagnosis records</li>
+<li><code>create_address_records()</code> - Creates address records</li>
+<li><code>create_insurance_records()</code> - Creates insurance records</li>
+<li><code>create_visit_insurance_records()</code> -</li>
+<li><code>create_claims()</code> -</li>
+<li><code>create_claims_detail()</code> -</li>
+<li><code>create_procedures()</code> -</li>
+<li><code>create_visit_procedures()</code> -</li>
+<li><code>create_procedure_performers()</code> -</li>
+<li><code>create_claims_detail_procedures()</code> -</li>
+<li><code>create_locations()</code> -</li>
+</ul>
+</div>
+<div id="cultures_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.3</span> <code>cultures_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_cultures_mckesson_to_redox()</code> - Converts labs data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="encounters_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.4</span> <code>encounters_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_encounters_mckesson_to_redox()</code> - Converts orders data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="flowsheets_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.5</span> <code>flowsheets_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_flowsheets_mckesson_to_redox()</code> - Converts flowsheet data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="labs_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.6</span> <code>labs_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_labs_mckesson_to_redox()</code> - Converts labs data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="locations_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.7</span> <code>locations_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>get_mck_pt_unit_timeline()</code> - Returns the date from and to a patient was on a unit, along with other statistics, including # of hrs, ICU hrs.</li>
+</ul>
+</div>
+<div id="orders_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.8</span> <code>orders_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_orders_mckesson_to_redox()</code> - Converts orders data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="providers_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.9</span> <code>providers_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_providers_mckesson_to_redox()</code> - Converts orders data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="radiology_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.10</span> <code>radiology_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_radiology_mckesson_to_redox()</code> - Converts radiology data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="reference_factory.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.11</span> <code>reference_factory.R</code></h4>
+<ul>
+<li><code>lookup_provider_id_by_NPI()</code> - Get’s a the corresponding provider Id for the given NPI</li>
+<li><code>lookup_provider_id_by_phys_nbr()</code> - Gets the provider ID using the McKesson physician number</li>
+<li><code>lookup_PatientId_by_MRN()</code> - Looks up the patient’s ID by the MRN number</li>
+<li><code>lookup_VisitID_by_encounter_id()</code> - Looks up the VisitID using the VisitNumber (aka encounter_id)</li>
+<li><code>lookup_facilty_id_by_dept_id()</code> - Lookup facility ID by McKesson department ID (</li>
+<li><code>map_old_dx_to_new_dx()</code> -</li>
+<li><code>run_sp_dupe_mrn_patch()</code> -</li>
+</ul>
+</div>
+<div id="rx_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.12</span> <code>rx_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_rx_mckesson_to_redox()</code> - Converts orders data from McKesson format into Redox format.</li>
+</ul>
+</div>
+<div id="seed_data.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.13</span> <code>seed_data.R</code></h4>
+<ul>
+<li></li>
+</ul>
+</div>
+<div id="update_factory.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.14</span> <code>update_factory.R</code></h4>
+<ul>
+<li><code>update_patient_address()</code> - Updates the patients address ID onthe patient record</li>
+</ul>
+</div>
+<div id="vitals_mckesson_to_redox.r" class="section level4">
+<h4><span class="header-section-number">4.3.2.15</span> <code>vitals_mckesson_to_redox.R</code></h4>
+<ul>
+<li><code>convert_vitals_mckesson_to_redox()</code> - Converts vitals / charts data from McKesson format into Redox format.</li>
+</ul>
+</div>
+</div>
+<div id="rdao-2" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> <code>/r/dao</code></h3>
+<div id="allergy_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.1</span> <code>allergy_dao.R</code></h4>
+<ul>
+<li><code>get_allergies()</code> -</li>
+</ul>
+</div>
+<div id="application_cache.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.2</span> <code>application_cache.R</code></h4>
+<ul>
+<li><code>validate_cache()</code> -</li>
+<li><code>update_order_cache()</code> -</li>
+<li><code>update_result_cache()</code> -</li>
+<li><code>update_MedicationDetails_cache()</code> -</li>
+<li><code>update_vitals_cache()</code> -</li>
+<li><code>destroy_order_cache()</code> -</li>
+<li><code>destroy_result_cache()</code> -</li>
+<li><code>destroy_MedicationDetails_cache()</code> -</li>
+<li><code>destroy_vitals_cache()</code> -</li>
+</ul>
+</div>
+<div id="culture_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.3</span> <code>culture_dao.R</code></h4>
+<ul>
+<li><code>get_culture_org_sensitivity()</code> - Get’s the culture data and extracts features for the orgnaims identified, it’s resistance to particular antibiotics, and the initial gram stain.</li>
+<li><code>get_cultures_data()</code> -</li>
+<li><code>get_mckesson_cultures_data()</code> -</li>
+<li><code>clean_cultures_data()</code> -</li>
+<li><code>preprocess_sensitivities()</code> - Process the cultures data (that has been cleaned with clean_cultures) into resulting sensitivities by antibiotic</li>
+<li><code>get_organism_names()</code> -</li>
+<li><code>get_organism_sev()</code> -</li>
+<li><code>get_organism_stop_words()</code> -</li>
+<li><code>preprocess_organism()</code> - Process the cultures data (that has been cleaned with clean_cultures) into the organsim identified.</li>
+<li><code>preprocess_gram_stain()</code> - Process gram stain results from the cultures data (that has been cleaned with clean_cultures)</li>
+<li><code>preprocess_mck_gram_stain()</code> -</li>
+<li><code>preprocess_mck_organism()</code> -</li>
+<li><code>preprocess_mck_sensitivities()</code> -</li>
+<li><code>get_antibiogram_sepsis_wma()</code> -</li>
+<li><code>get_antibiogram_sepsis()</code> -</li>
+<li><code>get_antibiogram_stain_wma()</code> -</li>
+<li><code>get_antibiogram_stain()</code> -</li>
+<li><code>get_antibiogram_wma()</code> -</li>
+<li><code>get_antibiogram()</code> - Creates an antibiogram from cultures data.</li>
+<li><code>get_suspected_infection_data()</code> -</li>
+<li><code>get_blood_cultures_ordered_data()</code> - get_blood_cultures_ordered_data Returns patients who have had a blood culture ordered</li>
+</ul>
+</div>
+<div id="development_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.4</span> <code>development_dao.R</code></h4>
+<ul>
+<li><code>get_dev_end_date()</code> -</li>
+</ul>
+</div>
+<div id="diagnosis_doa.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.5</span> <code>diagnosis_doa.R</code></h4>
+<ul>
+<li><code>get_pt_diagnosis()</code> -</li>
+<li><code>get_dx_ccs_comorbity_data()</code> -</li>
+<li><code>get_mck_dx()</code> -</li>
+<li><code>get_all_dx_data()</code> -</li>
+</ul>
+</div>
+<div id="encounter_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.6</span> <code>encounter_dao.R</code></h4>
+<ul>
+<li><code>get_visits()</code> -</li>
+<li><code>get_visit_events()</code> -</li>
+<li><code>get_patient_events()</code> -</li>
+<li><code>get_encounter_LOS_data()</code> - Get all patient encounters LOS related metrics.</li>
+<li><code>get_readmission_data()</code> -</li>
+<li><code>get_discharge_disposition()</code> -</li>
+<li><code>get_discharge_decodes()</code> -</li>
+<li><code>get_encounter_date_data()</code> - get_encounter_date_data get admit and discharge times of all encounters</li>
+<li><code>get_adm_diag_labelled_data()</code> -</li>
+<li><code>get_drg_db()</code> -</li>
+<li><code>get_adm_diag_unlabelled_data()</code> -</li>
+<li><code>get_pt_insurance_data()</code> -</li>
+<li><code>get_pt_financial_class_long()</code> -</li>
+<li><code>get_pt_financial_class()</code> - get_pt_financial_class gets financial class of all patients (xmatches on mapping xls)</li>
+<li><code>get_pt_demographics()</code> -</li>
+<li><code>get_return_ed_visits()</code> - get_return_ed_visits gets stays that result in a ed visit 72hrs or less after discharge</li>
+<li><code>get_ed_visit_data()</code> - get_ed_visit_data Returns ED visit info for star schema - including visit and los (minutes)</li>
+<li><code>get_all_valid_pat_types()</code> - get_all_valid_pat_types using pat_type_decode, returns all potential pat_types for analysis</li>
+<li><code>get_visit_times()</code> -</li>
+<li><code>get_ed_times()</code> -</li>
+<li><code>get_visit_age_sex_data()</code> -</li>
+</ul>
+</div>
+<div id="facility_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.7</span> <code>facility_dao.R</code></h4>
+<ul>
+<li><code>get_unit_metrics()</code> - Gets the predominant MDC, DRG For a unit over the time period specified by DV specifi</li>
+<li><code>get_latest_unit_room_bed()</code> -</li>
+</ul>
+</div>
+<div id="flowsheet_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.8</span> <code>flowsheet_dao.R</code></h4>
+<ul>
+<li></li>
+</ul>
+</div>
+<div id="lab_dao.r-1" class="section level4">
+<h4><span class="header-section-number">4.3.3.9</span> <code>lab_dao.R</code></h4>
+<ul>
+<li><code>get_creatinine_data()</code> - get_creatinine_data Returns creatinine labs data</li>
+<li><code>get_bilirubin_data()</code> - get_bilirubin_data Returns total bilirubin labs data</li>
+<li><code>get_platelets_data()</code> - get_platelets_data Returns platelet count labs data</li>
+<li><code>get_wbc_band_data()</code> - get_wbc_band_data Returns WBC bands (marker of infection) labs data</li>
+<li><code>get_wbc_data()</code> - get_wbc_data Returns WBC cnt (marker of infection) labs data</li>
+<li><code>get_lactate_data()</code> - get_lactate_data Returns lactate labs data</li>
+<li><code>get_lab_data()</code> - get_lactate_order_data Returns lactate labs ordered data</li>
+<li><code>clean_lab_data()</code> -</li>
+</ul>
+</div>
+<div id="md_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.10</span> <code>md_dao.R</code></h4>
+<ul>
+<li><code>get_pt_md_xref()</code> - Gets a cross reference data table between the patient, admitting MD, attending MD, and PCP MD.</li>
+<li><code>get_pt_phys_data()</code> - get_pt_phys_data returns list of physicians per encounter and physician type. includes admitting, attending, pcp, procedures/surgeons, consults.</li>
+<li><code>get_md_xref()</code> -</li>
+<li><code>get_active_physicians()</code> -</li>
+<li><code>get_providers_data()</code> -</li>
+</ul>
+</div>
+<div id="order_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.11</span> <code>order_dao.R</code></h4>
+<ul>
+<li><code>get_orders()</code> -</li>
+<li><code>get_orders_data_by_name()</code> -</li>
+</ul>
+</div>
+<div id="patient_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.12</span> <code>patient_dao.R</code></h4>
+<ul>
+<li><code>get_patient_data()</code> -</li>
+<li><code>make_pat_type_sql()</code> - make_pat_type_sql produces where clause from list of patient types passed in</li>
+</ul>
+</div>
+<div id="procedure_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.13</span> <code>procedure_dao.R</code></h4>
+<ul>
+<li><code>get_procedure_data()</code> -</li>
+</ul>
+</div>
+<div id="rad_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.14</span> <code>rad_dao.R</code></h4>
+<ul>
+<li><code>get_ris_data()</code> -</li>
+<li><code>split_ris_data_subheadings()</code> -</li>
+</ul>
+</div>
+<div id="rx_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.15</span> <code>rx_dao.R</code></h4>
+<ul>
+<li><code>get_rx_data()</code> -</li>
+<li><code>get_rx_duration()</code> - Gets the average duration for each drug name, based primarily off the median time b/w start and end. However if this is below 1 hour then the mean is used. If this is still below 1 then 1 is used.</li>
+<li><code>get_rx_xref()</code> - get_rx_xref Quickest way to get rx_xref</li>
+<li><code>get_formulary()</code> -</li>
+<li><code>get_synonym_product_linking()</code> -</li>
+<li><code>get_order_catalog_rx_norm()</code> -</li>
+<li><code>get_formulary_catalog_factory()</code> -</li>
+<li><code>get_rx_data_by_names()</code> - get_rx_data_by_names return rx source data of rx names that are passed in. Matches against proprietary, nonproprietary and substance names (as well as how it’s coded in the db). For faster results, pass in rx_xref - prepared by: rx_xref &lt;- iRxLookup(rx_vec=unique(rx_data<span class="math inline">\(DRUG_NAME),ndc=iPrepareNDC(params\)</span>external_dir));</li>
+<li><code>get_abx_data()</code> - get_abx_data get RX records of antibiotics</li>
+<li><code>get_vasopressor_data()</code> - get_vasopressor_data get RX records of vasopressors</li>
+<li><code>get_heparin_list()</code> -</li>
+<li><code>get_heparin_data()</code> - get_heparin_data get RX records of heparins</li>
+<li><code>get_ppi_data()</code> - get_ppi_data get RX records of proton pump inhibitors</li>
+<li><code>get_h2_blocker_data()</code> - get_h2_blocker_data get RX records of H2-blockers</li>
+<li><code>get_pud_rx_data()</code> - get_pud_rx_data Gets peptic ulcer disease (stress ulcer prophylaxis) RX records</li>
+<li><code>get_blood_thinner_rx_data()</code> - get_blood_thinner_rx_data</li>
+<li><code>get_crystalloids_data()</code> -</li>
+</ul>
+</div>
+<div id="validate_dao.r" class="section level4">
+<h4><span class="header-section-number">4.3.3.16</span> <code>validate_dao.R</code></h4>
+<ul>
+<li><code>get_validate_discharge_disposition_data()</code> - Validates that discharge disposition is populated frequently enough</li>
+<li><code>get_validate_DRG_data()</code> - Runs and stores DRG sql query for unit test validate_DRG</li>
+<li><code>get_test_search_names()</code> - Generates list of SQL search criteria for desired test validation from labs_vitals_names_xref.xlsx</li>
+<li><code>get_warn_pct()</code> - Stores warn percent for desired test validation from labs_vitals_warn_error_pct_xref.xlsx</li>
+<li><code>get_error_pct()</code> - Stores error percent for desired test validation from labs_vitals_warn_error_pct_xref.xlsx</li>
+<li><code>get_validate_test_data()</code> - Uses list of SQL search criteria from get_test_search_names for desired test validation and runs SQL query, results stored in data table</li>
+<li><code>get_abx_search_names()</code> - Generates list of SQL search criteria for antibiotics validation from abx_names_xref.xlsx</li>
+<li><code>get_validate_antibiotic_data()</code> - Uses list of SQL search criteria from get_abx_search_names for antibiotic validation and runs SQL query, results stored in data table</li>
+</ul>
+</div>
+<div id="vital_dao.r-1" class="section level4">
+<h4><span class="header-section-number">4.3.3.17</span> <code>vital_dao.R</code></h4>
+<ul>
+<li><code>get_temperature_data()</code> - get_temperature_data returns temperature data from CHARTS with temp_abnormal flag #’ <span class="citation">(<span class="citeproc-not-found" data-reference-id="param"><strong>???</strong></span>)</span> params</li>
+<li><code>get_temperature_types()</code> - get_temperature_types Gets temperature types in database</li>
+<li><code>get_htn_bp_data()</code> -</li>
+<li><code>get_blood_pressure_data()</code> -</li>
+<li><code>get_dbp_types()</code> - returns vital names of diastolic pressures in SF database</li>
+<li><code>get_sbp_types()</code> - returns vital names of systolic blood pressures in SF database</li>
+<li><code>get_map_types()</code> - returns vital names of mean arterial pressures in SF database</li>
+<li><code>get_heart_rate_types()</code> -</li>
+<li><code>get_pulse_types()</code> - returns vital names of heart rate / pulse in SF database</li>
+<li><code>get_pulse_data()</code> -</li>
+<li><code>get_respiration_rate_types()</code> - returns vital names of respiration rate in SF database</li>
+<li><code>get_respiration_rate_data()</code> -</li>
+<li><code>get_vital_data()</code> -</li>
+<li><code>clean_vital_data()</code> -</li>
+<li><code>get_vital_type_lookup()</code> -</li>
+<li><code>get_baseline_values()</code> -</li>
+<li><code>get_encounter_last_values()</code> -</li>
+<li><code>get_value_difference()</code> -</li>
+<li><code>clean_vital_data_numeric()</code> -</li>
+<li><code>flag_abnormal_vital_data_numeric()</code> -</li>
+<li><code>map_vital_data()</code> -</li>
+</ul>
+</div>
+</div>
+<div id="rreports-1" class="section level3">
+<h3><span class="header-section-number">4.3.4</span> <code>/r/reports</code></h3>
+<div id="report_data.r-1" class="section level4">
+<h4><span class="header-section-number">4.3.4.1</span> <code>report_data.R</code></h4>
+<ul>
+<li><code>get_IVDV()</code> -</li>
+<li><code>get_DV_pt_phys()</code> - get_DV_pt_phys produces a row for every unique physician-patient interaction w/ variables to use for OPPE reports note: if physician performs multiple procedures on a patient, there will only be one row returned here for that combination</li>
+<li><code>get_DV_data_basic()</code> - get_DV_data_basic gets DV data consisting of: los, readm, cdiff, quality (hac), and psi</li>
+<li><code>get_dim_and_measure_data()</code> - Gets inpateint data from STAR encounters</li>
+<li><code>get_prod_data()</code> -</li>
+<li><code>get_production_x_data()</code> - Gets the X dataset in wide format from the production database (inpatient_preprocessed_inputs) in wide form.</li>
+<li><code>get_unit_list()</code> - list of units</li>
+<li><code>get_current_house_ipt()</code> -</li>
+<li><code>get_inpatient_summary_dev()</code> -</li>
+<li><code>get_payor_info()</code> -</li>
+</ul>
+</div>
+<div id="star_schema_hl7.r" class="section level4">
+<h4><span class="header-section-number">4.3.4.2</span> <code>star_schema_hl7.R</code></h4>
+<ul>
+<li><code>get_split_by_list()</code> -</li>
+<li><code>get_rank_by_list()</code> -</li>
+<li><code>export_star_schema_tables_to_resources()</code> - Calculates all of the star schema, combines them together, and saves to the database. TO BE DEPRECATED FOR WHAT IS IN STAC</li>
+<li><code>import_star_schema_from_resources()</code> - Imports the star schema measure and dimension tables from the resources directory.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="stfrancis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="stac.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code-inventory.pdf", "code-inventory.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

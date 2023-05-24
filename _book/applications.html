@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Applications | Life2 Code Compendium</title>
+  <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Applications | Life2 Code Compendium" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Applications | Life2 Code Compendium" />
+  
+  <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Derek McCrae Norton" />
+
+
+<meta name="date" content="2021-04-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="methods.html"/>
+<link rel="next" href="final-words.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Life2 Code Compendium</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#locations"><i class="fa fa-check"></i><b>1.1</b> Locations</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#general-notes"><i class="fa fa-check"></i><b>1.2</b> General notes</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#bookdown-info"><i class="fa fa-check"></i><b>1.3</b> Bookdown Info</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="gba.html"><a href="gba.html"><i class="fa fa-check"></i><b>2</b> Georgia Bankers Association</a><ul>
+<li class="chapter" data-level="2.1" data-path="gba.html"><a href="gba.html#project-structure"><i class="fa fa-check"></i><b>2.1</b> Project Structure</a></li>
+<li class="chapter" data-level="2.2" data-path="gba.html"><a href="gba.html#notes-questions"><i class="fa fa-check"></i><b>2.2</b> Notes / Questions</a></li>
+<li class="chapter" data-level="2.3" data-path="gba.html"><a href="gba.html#r-code"><i class="fa fa-check"></i><b>2.3</b> <code>R</code> Code</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="gba.html"><a href="gba.html#r"><i class="fa fa-check"></i><b>2.3.1</b> <code>/R</code></a><ul>
+<li class="chapter" data-level="2.3.1.1" data-path="gba.html"><a href="gba.html#main.r"><i class="fa fa-check"></i><b>2.3.1.1</b> <code>main.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.2" data-path="gba.html"><a href="gba.html#rmodel"><i class="fa fa-check"></i><b>2.3.2</b> <code>/R/model</code></a><ul>
+<li class="chapter" data-level="2.3.2.1" data-path="gba.html"><a href="gba.html#build.r"><i class="fa fa-check"></i><b>2.3.2.1</b> <code>build.R</code></a></li>
+<li class="chapter" data-level="2.3.2.2" data-path="gba.html"><a href="gba.html#correlate.r"><i class="fa fa-check"></i><b>2.3.2.2</b> <code>correlate.R</code></a></li>
+<li class="chapter" data-level="2.3.2.3" data-path="gba.html"><a href="gba.html#model_helper.r"><i class="fa fa-check"></i><b>2.3.2.3</b> <code>model_helper.R</code></a></li>
+<li class="chapter" data-level="2.3.2.4" data-path="gba.html"><a href="gba.html#version_mgmt.r"><i class="fa fa-check"></i><b>2.3.2.4</b> <code>version_mgmt.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.3" data-path="gba.html"><a href="gba.html#rarch"><i class="fa fa-check"></i><b>2.3.3</b> <code>/R/arch</code></a><ul>
+<li class="chapter" data-level="2.3.3.1" data-path="gba.html"><a href="gba.html#data_importing.r"><i class="fa fa-check"></i><b>2.3.3.1</b> <code>data_importing.R</code></a></li>
+<li class="chapter" data-level="2.3.3.2" data-path="gba.html"><a href="gba.html#development.r"><i class="fa fa-check"></i><b>2.3.3.2</b> <code>development.R</code></a></li>
+<li class="chapter" data-level="2.3.3.3" data-path="gba.html"><a href="gba.html#logging.r"><i class="fa fa-check"></i><b>2.3.3.3</b> <code>logging.R</code></a></li>
+<li class="chapter" data-level="2.3.3.4" data-path="gba.html"><a href="gba.html#prediction.r"><i class="fa fa-check"></i><b>2.3.3.4</b> <code>prediction.R</code></a></li>
+<li class="chapter" data-level="2.3.3.5" data-path="gba.html"><a href="gba.html#preprocessing.r"><i class="fa fa-check"></i><b>2.3.3.5</b> <code>preprocessing.R</code></a></li>
+<li class="chapter" data-level="2.3.3.6" data-path="gba.html"><a href="gba.html#production.r"><i class="fa fa-check"></i><b>2.3.3.6</b> <code>production.R</code></a></li>
+<li class="chapter" data-level="2.3.3.7" data-path="gba.html"><a href="gba.html#setup_prod.r"><i class="fa fa-check"></i><b>2.3.3.7</b> <code>setup_prod.R</code></a></li>
+<li class="chapter" data-level="2.3.3.8" data-path="gba.html"><a href="gba.html#setup_r.r"><i class="fa fa-check"></i><b>2.3.3.8</b> <code>setup_R.R</code></a></li>
+<li class="chapter" data-level="2.3.3.9" data-path="gba.html"><a href="gba.html#utilities.r"><i class="fa fa-check"></i><b>2.3.3.9</b> <code>utilities.R</code></a></li>
+<li class="chapter" data-level="2.3.3.10" data-path="gba.html"><a href="gba.html#variable_handling.r"><i class="fa fa-check"></i><b>2.3.3.10</b> <code>variable_handling.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.4" data-path="gba.html"><a href="gba.html#rpreprocessors"><i class="fa fa-check"></i><b>2.3.4</b> <code>/R/preprocessors</code></a><ul>
+<li class="chapter" data-level="2.3.4.1" data-path="gba.html"><a href="gba.html#pp_dv.r"><i class="fa fa-check"></i><b>2.3.4.1</b> <code>pp_dv.R</code></a></li>
+<li class="chapter" data-level="2.3.4.2" data-path="gba.html"><a href="gba.html#pp_iv_case_mgmt.r"><i class="fa fa-check"></i><b>2.3.4.2</b> <code>pp_iv_case_mgmt.R</code></a></li>
+<li class="chapter" data-level="2.3.4.3" data-path="gba.html"><a href="gba.html#pp_iv_dental_claim.r"><i class="fa fa-check"></i><b>2.3.4.3</b> <code>pp_iv_dental_claim.R</code></a></li>
+<li class="chapter" data-level="2.3.4.4" data-path="gba.html"><a href="gba.html#pp_iv_eligibility.r"><i class="fa fa-check"></i><b>2.3.4.4</b> <code>pp_iv_eligibility.R</code></a></li>
+<li class="chapter" data-level="2.3.4.5" data-path="gba.html"><a href="gba.html#pp_iv_experian.r"><i class="fa fa-check"></i><b>2.3.4.5</b> <code>pp_iv_experian.R</code></a></li>
+<li class="chapter" data-level="2.3.4.6" data-path="gba.html"><a href="gba.html#pp_iv_med_claim.r"><i class="fa fa-check"></i><b>2.3.4.6</b> <code>pp_iv_med_claim.R</code></a></li>
+<li class="chapter" data-level="2.3.4.7" data-path="gba.html"><a href="gba.html#pp_iv_precert.r"><i class="fa fa-check"></i><b>2.3.4.7</b> <code>pp_iv_precert.R</code></a></li>
+<li class="chapter" data-level="2.3.4.8" data-path="gba.html"><a href="gba.html#pp_iv_provider.r"><i class="fa fa-check"></i><b>2.3.4.8</b> <code>pp_iv_provider.R</code></a></li>
+<li class="chapter" data-level="2.3.4.9" data-path="gba.html"><a href="gba.html#pp_iv_rx.r"><i class="fa fa-check"></i><b>2.3.4.9</b> <code>pp_iv_rx.R</code></a></li>
+<li class="chapter" data-level="2.3.4.10" data-path="gba.html"><a href="gba.html#pp_iv_temporal.r"><i class="fa fa-check"></i><b>2.3.4.10</b> <code>pp_iv_temporal.R</code></a></li>
+<li class="chapter" data-level="2.3.4.11" data-path="gba.html"><a href="gba.html#pp_iv_wellview.r"><i class="fa fa-check"></i><b>2.3.4.11</b> <code>pp_iv_wellview.R</code></a></li>
+<li class="chapter" data-level="2.3.4.12" data-path="gba.html"><a href="gba.html#pp_util.r"><i class="fa fa-check"></i><b>2.3.4.12</b> <code>pp_util.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.5" data-path="gba.html"><a href="gba.html#rreporting"><i class="fa fa-check"></i><b>2.3.5</b> <code>/R/reporting</code></a><ul>
+<li class="chapter" data-level="2.3.5.1" data-path="gba.html"><a href="gba.html#data_reporting.r"><i class="fa fa-check"></i><b>2.3.5.1</b> <code>data_reporting.R</code></a></li>
+<li class="chapter" data-level="2.3.5.2" data-path="gba.html"><a href="gba.html#leakage_reporting.r"><i class="fa fa-check"></i><b>2.3.5.2</b> <code>leakage_reporting.R</code></a></li>
+<li class="chapter" data-level="2.3.5.3" data-path="gba.html"><a href="gba.html#mrr_reporting.r"><i class="fa fa-check"></i><b>2.3.5.3</b> <code>mrr_reporting.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.6" data-path="gba.html"><a href="gba.html#rdata"><i class="fa fa-check"></i><b>2.3.6</b> <code>/R/data</code></a><ul>
+<li class="chapter" data-level="2.3.6.1" data-path="gba.html"><a href="gba.html#dental_claim_factory.r"><i class="fa fa-check"></i><b>2.3.6.1</b> <code>dental_claim_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.2" data-path="gba.html"><a href="gba.html#diabetes_factory.r"><i class="fa fa-check"></i><b>2.3.6.2</b> <code>diabetes_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.3" data-path="gba.html"><a href="gba.html#eligibility_factory.r"><i class="fa fa-check"></i><b>2.3.6.3</b> <code>eligibility_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.4" data-path="gba.html"><a href="gba.html#experian_factory.r"><i class="fa fa-check"></i><b>2.3.6.4</b> <code>experian_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.5" data-path="gba.html"><a href="gba.html#leakage_patterns_factory.r"><i class="fa fa-check"></i><b>2.3.6.5</b> <code>leakage_patterns_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.6" data-path="gba.html"><a href="gba.html#leakage_patterns_modifier_factory.r"><i class="fa fa-check"></i><b>2.3.6.6</b> <code>leakage_patterns_modifier_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.7" data-path="gba.html"><a href="gba.html#leakage_patterns_provider_watchlist_factory.r"><i class="fa fa-check"></i><b>2.3.6.7</b> <code>leakage_patterns_provider_watchlist_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.8" data-path="gba.html"><a href="gba.html#leakage_patterns_rx_factory.r"><i class="fa fa-check"></i><b>2.3.6.8</b> <code>leakage_patterns_rx_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.9" data-path="gba.html"><a href="gba.html#leakage_reference_factory.r"><i class="fa fa-check"></i><b>2.3.6.9</b> <code>leakage_reference_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.10" data-path="gba.html"><a href="gba.html#leakage_utilities_factory.r"><i class="fa fa-check"></i><b>2.3.6.10</b> <code>leakage_utilities_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.11" data-path="gba.html"><a href="gba.html#med_claim_factory.r"><i class="fa fa-check"></i><b>2.3.6.11</b> <code>med_claim_factory.R</code></a></li>
+<li class="chapter" data-level="2.3.6.12" data-path="gba.html"><a href="gba.html#rx_factory.r"><i class="fa fa-check"></i><b>2.3.6.12</b> <code>rx_factory.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.7" data-path="gba.html"><a href="gba.html#rrules"><i class="fa fa-check"></i><b>2.3.7</b> <code>/R/rules</code></a><ul>
+<li class="chapter" data-level="2.3.7.1" data-path="gba.html"><a href="gba.html#rl_inputs.r"><i class="fa fa-check"></i><b>2.3.7.1</b> <code>rl_inputs.R</code></a></li>
+<li class="chapter" data-level="2.3.7.2" data-path="gba.html"><a href="gba.html#rl_run.r"><i class="fa fa-check"></i><b>2.3.7.2</b> <code>rl_run.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.8" data-path="gba.html"><a href="gba.html#rrulesdefs"><i class="fa fa-check"></i><b>2.3.8</b> <code>/R/rules/defs</code></a><ul>
+<li class="chapter" data-level="2.3.8.1" data-path="gba.html"><a href="gba.html#referral_rule_defs.r"><i class="fa fa-check"></i><b>2.3.8.1</b> <code>referral_rule_defs.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.9" data-path="gba.html"><a href="gba.html#rvalidate"><i class="fa fa-check"></i><b>2.3.9</b> <code>/R/validate</code></a><ul>
+<li class="chapter" data-level="2.3.9.1" data-path="gba.html"><a href="gba.html#med_claim_validate.r"><i class="fa fa-check"></i><b>2.3.9.1</b> <code>med_claim_validate.R</code></a></li>
+<li class="chapter" data-level="2.3.9.2" data-path="gba.html"><a href="gba.html#rx_claim_validate.r"><i class="fa fa-check"></i><b>2.3.9.2</b> <code>rx_claim_validate.R</code></a></li>
+<li class="chapter" data-level="2.3.9.3" data-path="gba.html"><a href="gba.html#validate_test_defs.r"><i class="fa fa-check"></i><b>2.3.9.3</b> <code>validate_test_defs.R</code></a></li>
+<li class="chapter" data-level="2.3.9.4" data-path="gba.html"><a href="gba.html#validate_util.r"><i class="fa fa-check"></i><b>2.3.9.4</b> <code>validate_util.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.10" data-path="gba.html"><a href="gba.html#rdao"><i class="fa fa-check"></i><b>2.3.10</b> <code>/R/dao</code></a><ul>
+<li class="chapter" data-level="2.3.10.1" data-path="gba.html"><a href="gba.html#area_stats_dao.r"><i class="fa fa-check"></i><b>2.3.10.1</b> <code>area_stats_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.2" data-path="gba.html"><a href="gba.html#case_mgmt_dao.r"><i class="fa fa-check"></i><b>2.3.10.2</b> <code>case_mgmt_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.3" data-path="gba.html"><a href="gba.html#census_dao.r"><i class="fa fa-check"></i><b>2.3.10.3</b> <code>census_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.4" data-path="gba.html"><a href="gba.html#coding_dao.r"><i class="fa fa-check"></i><b>2.3.10.4</b> <code>coding_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.5" data-path="gba.html"><a href="gba.html#dao_db_util.r"><i class="fa fa-check"></i><b>2.3.10.5</b> <code>dao_db_util.R</code></a></li>
+<li class="chapter" data-level="2.3.10.6" data-path="gba.html"><a href="gba.html#dao_format_util.r"><i class="fa fa-check"></i><b>2.3.10.6</b> <code>dao_format_util.R</code></a></li>
+<li class="chapter" data-level="2.3.10.7" data-path="gba.html"><a href="gba.html#dao_import_util.r"><i class="fa fa-check"></i><b>2.3.10.7</b> <code>dao_import_util.R</code></a></li>
+<li class="chapter" data-level="2.3.10.8" data-path="gba.html"><a href="gba.html#dao_util.r"><i class="fa fa-check"></i><b>2.3.10.8</b> <code>dao_util.R</code></a></li>
+<li class="chapter" data-level="2.3.10.9" data-path="gba.html"><a href="gba.html#eligibility_dao.r"><i class="fa fa-check"></i><b>2.3.10.9</b> <code>eligibility_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.10" data-path="gba.html"><a href="gba.html#experian_dao.r"><i class="fa fa-check"></i><b>2.3.10.10</b> <code>experian_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.11" data-path="gba.html"><a href="gba.html#med_claim_dao.r"><i class="fa fa-check"></i><b>2.3.10.11</b> <code>med_claim_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.12" data-path="gba.html"><a href="gba.html#plan_types_dao.r"><i class="fa fa-check"></i><b>2.3.10.12</b> <code>plan_types_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.13" data-path="gba.html"><a href="gba.html#precert_dao.r"><i class="fa fa-check"></i><b>2.3.10.13</b> <code>precert_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.14" data-path="gba.html"><a href="gba.html#production_dao.r"><i class="fa fa-check"></i><b>2.3.10.14</b> <code>production_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.15" data-path="gba.html"><a href="gba.html#provider_watch_dao.r"><i class="fa fa-check"></i><b>2.3.10.15</b> <code>provider_watch_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.16" data-path="gba.html"><a href="gba.html#rx_claim_dao.r"><i class="fa fa-check"></i><b>2.3.10.16</b> <code>rx_claim_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.17" data-path="gba.html"><a href="gba.html#web_dao.r"><i class="fa fa-check"></i><b>2.3.10.17</b> <code>web_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.18" data-path="gba.html"><a href="gba.html#wellview_dao.r"><i class="fa fa-check"></i><b>2.3.10.18</b> <code>wellview_dao.R</code></a></li>
+<li class="chapter" data-level="2.3.10.19" data-path="gba.html"><a href="gba.html#who_flu_dao.r"><i class="fa fa-check"></i><b>2.3.10.19</b> <code>who_flu_dao.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.11" data-path="gba.html"><a href="gba.html#rmain.r---creates-a-number-of-high-level-functions-used-to-invoke-lower-level-functions"><i class="fa fa-check"></i><b>2.3.11</b> <code>/R/main.R</code> - Creates a number of high level functions used to invoke lower level functions</a></li>
+<li class="chapter" data-level="2.3.12" data-path="gba.html"><a href="gba.html#rmodel---functions-for-creating-the-models"><i class="fa fa-check"></i><b>2.3.12</b> <code>R/model/</code> - Functions for creating the models</a></li>
+<li class="chapter" data-level="2.3.13" data-path="gba.html"><a href="gba.html#rarchsetup_r.r"><i class="fa fa-check"></i><b>2.3.13</b> <code>R/arch/setup_R.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="gba.html"><a href="gba.html#usage"><i class="fa fa-check"></i><b>2.4</b> Usage</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="stfrancis.html"><a href="stfrancis.html"><i class="fa fa-check"></i><b>3</b> St Francis</a><ul>
+<li class="chapter" data-level="3.1" data-path="stfrancis.html"><a href="stfrancis.html#project-structure-1"><i class="fa fa-check"></i><b>3.1</b> Project Structure</a></li>
+<li class="chapter" data-level="3.2" data-path="stfrancis.html"><a href="stfrancis.html#notes-questions-1"><i class="fa fa-check"></i><b>3.2</b> Notes / Questions</a></li>
+<li class="chapter" data-level="3.3" data-path="stfrancis.html"><a href="stfrancis.html#r-code-1"><i class="fa fa-check"></i><b>3.3</b> <code>R</code> Code</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="stfrancis.html"><a href="stfrancis.html#r-1"><i class="fa fa-check"></i><b>3.3.1</b> <code>/r</code></a><ul>
+<li class="chapter" data-level="3.3.1.1" data-path="stfrancis.html"><a href="stfrancis.html#inpatient_main.r"><i class="fa fa-check"></i><b>3.3.1.1</b> <code>inpatient_main.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.2" data-path="stfrancis.html"><a href="stfrancis.html#rdao-1"><i class="fa fa-check"></i><b>3.3.2</b> <code>/r/dao</code></a><ul>
+<li class="chapter" data-level="3.3.2.1" data-path="stfrancis.html"><a href="stfrancis.html#ahrq_dao.r"><i class="fa fa-check"></i><b>3.3.2.1</b> <code>AHRQ_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.2" data-path="stfrancis.html"><a href="stfrancis.html#dx_dao.r"><i class="fa fa-check"></i><b>3.3.2.2</b> <code>Dx_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.3" data-path="stfrancis.html"><a href="stfrancis.html#enc_dao.r"><i class="fa fa-check"></i><b>3.3.2.3</b> <code>Enc_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.4" data-path="stfrancis.html"><a href="stfrancis.html#lab_dao.r"><i class="fa fa-check"></i><b>3.3.2.4</b> <code>Lab_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.5" data-path="stfrancis.html"><a href="stfrancis.html#tx_dao.r"><i class="fa fa-check"></i><b>3.3.2.5</b> <code>Tx_dao.R</code></a></li>
+<li class="chapter" data-level="3.3.2.6" data-path="stfrancis.html"><a href="stfrancis.html#vital_dao.r"><i class="fa fa-check"></i><b>3.3.2.6</b> <code>Vital_dao.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.3" data-path="stfrancis.html"><a href="stfrancis.html#rcommon"><i class="fa fa-check"></i><b>3.3.3</b> <code>/r/common</code></a><ul>
+<li class="chapter" data-level="3.3.3.1" data-path="stfrancis.html"><a href="stfrancis.html#build_sf_models.r"><i class="fa fa-check"></i><b>3.3.3.1</b> <code>build_sf_models.R</code></a></li>
+<li class="chapter" data-level="3.3.3.2" data-path="stfrancis.html"><a href="stfrancis.html#data_converters.r"><i class="fa fa-check"></i><b>3.3.3.2</b> <code>data_converters.R</code></a></li>
+<li class="chapter" data-level="3.3.3.3" data-path="stfrancis.html"><a href="stfrancis.html#database_access.r"><i class="fa fa-check"></i><b>3.3.3.3</b> <code>database_access.R</code></a></li>
+<li class="chapter" data-level="3.3.3.4" data-path="stfrancis.html"><a href="stfrancis.html#dedupe.r"><i class="fa fa-check"></i><b>3.3.3.4</b> <code>dedupe.R</code></a></li>
+<li class="chapter" data-level="3.3.3.5" data-path="stfrancis.html"><a href="stfrancis.html#load_sf.r"><i class="fa fa-check"></i><b>3.3.3.5</b> <code>load_sf.R</code></a></li>
+<li class="chapter" data-level="3.3.3.6" data-path="stfrancis.html"><a href="stfrancis.html#load_supplemental_data.r"><i class="fa fa-check"></i><b>3.3.3.6</b> <code>load_supplemental_data.R</code></a></li>
+<li class="chapter" data-level="3.3.3.7" data-path="stfrancis.html"><a href="stfrancis.html#run_common.r"><i class="fa fa-check"></i><b>3.3.3.7</b> <code>run_common.R</code></a></li>
+<li class="chapter" data-level="3.3.3.8" data-path="stfrancis.html"><a href="stfrancis.html#run_dev.r"><i class="fa fa-check"></i><b>3.3.3.8</b> <code>run_dev.R</code></a></li>
+<li class="chapter" data-level="3.3.3.9" data-path="stfrancis.html"><a href="stfrancis.html#run_prod.r"><i class="fa fa-check"></i><b>3.3.3.9</b> <code>run_prod.R</code></a></li>
+<li class="chapter" data-level="3.3.3.10" data-path="stfrancis.html"><a href="stfrancis.html#setup_prod.r-1"><i class="fa fa-check"></i><b>3.3.3.10</b> <code>setup_prod.R</code></a></li>
+<li class="chapter" data-level="3.3.3.11" data-path="stfrancis.html"><a href="stfrancis.html#shared_functions.r"><i class="fa fa-check"></i><b>3.3.3.11</b> <code>shared_functions.R</code></a></li>
+<li class="chapter" data-level="3.3.3.12" data-path="stfrancis.html"><a href="stfrancis.html#utils.r"><i class="fa fa-check"></i><b>3.3.3.12</b> <code>utils.R</code></a></li>
+<li class="chapter" data-level="3.3.3.13" data-path="stfrancis.html"><a href="stfrancis.html#validate_prod.r"><i class="fa fa-check"></i><b>3.3.3.13</b> <code>validate_prod.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.4" data-path="stfrancis.html"><a href="stfrancis.html#rrules-1"><i class="fa fa-check"></i><b>3.3.4</b> <code>/r/rules</code></a><ul>
+<li class="chapter" data-level="3.3.4.1" data-path="stfrancis.html"><a href="stfrancis.html#build_rules_inputs.r"><i class="fa fa-check"></i><b>3.3.4.1</b> <code>build_rules_inputs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.2" data-path="stfrancis.html"><a href="stfrancis.html#case_mgr_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.2</b> <code>case_mgr_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.3" data-path="stfrancis.html"><a href="stfrancis.html#infectious_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.3</b> <code>infectious_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.4" data-path="stfrancis.html"><a href="stfrancis.html#pne_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.4</b> <code>pne_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.5" data-path="stfrancis.html"><a href="stfrancis.html#run_rules.r"><i class="fa fa-check"></i><b>3.3.4.5</b> <code>run_rules.R</code></a></li>
+<li class="chapter" data-level="3.3.4.6" data-path="stfrancis.html"><a href="stfrancis.html#sepsis_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.6</b> <code>sepsis_rule_defs.R</code></a></li>
+<li class="chapter" data-level="3.3.4.7" data-path="stfrancis.html"><a href="stfrancis.html#uti_rule_defs.r"><i class="fa fa-check"></i><b>3.3.4.7</b> <code>uti_rule_defs.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.5" data-path="stfrancis.html"><a href="stfrancis.html#rbuild_dataset"><i class="fa fa-check"></i><b>3.3.5</b> <code>/r/build_dataset</code></a><ul>
+<li class="chapter" data-level="3.3.5.1" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_actions.r"><i class="fa fa-check"></i><b>3.3.5.1</b> <code>build_x_dataset_actions.R</code></a></li>
+<li class="chapter" data-level="3.3.5.2" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_admission.r"><i class="fa fa-check"></i><b>3.3.5.2</b> <code>build_x_dataset_admission.R</code></a></li>
+<li class="chapter" data-level="3.3.5.3" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_anci.r"><i class="fa fa-check"></i><b>3.3.5.3</b> <code>build_x_dataset_ANCI.R</code></a></li>
+<li class="chapter" data-level="3.3.5.4" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_charts.r"><i class="fa fa-check"></i><b>3.3.5.4</b> <code>build_x_dataset_charts.R</code></a></li>
+<li class="chapter" data-level="3.3.5.5" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_cultures.r"><i class="fa fa-check"></i><b>3.3.5.5</b> <code>build_x_dataset_cultures.R</code></a></li>
+<li class="chapter" data-level="3.3.5.6" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_discharge.r"><i class="fa fa-check"></i><b>3.3.5.6</b> <code>build_x_dataset_discharge.R</code></a></li>
+<li class="chapter" data-level="3.3.5.7" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_dx.r"><i class="fa fa-check"></i><b>3.3.5.7</b> <code>build_x_dataset_dx.R</code></a></li>
+<li class="chapter" data-level="3.3.5.8" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_ecin.r"><i class="fa fa-check"></i><b>3.3.5.8</b> <code>build_x_dataset_ECIN.R</code></a></li>
+<li class="chapter" data-level="3.3.5.9" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_encounters.r"><i class="fa fa-check"></i><b>3.3.5.9</b> <code>build_x_dataset_encounters.R</code></a></li>
+<li class="chapter" data-level="3.3.5.10" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_flowsheet.r"><i class="fa fa-check"></i><b>3.3.5.10</b> <code>build_x_dataset_flowsheet.R</code></a></li>
+<li class="chapter" data-level="3.3.5.11" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_hac.r"><i class="fa fa-check"></i><b>3.3.5.11</b> <code>build_x_dataset_hac.R</code></a></li>
+<li class="chapter" data-level="3.3.5.12" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_hed.r"><i class="fa fa-check"></i><b>3.3.5.12</b> <code>build_x_dataset_HED.R</code></a></li>
+<li class="chapter" data-level="3.3.5.13" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_location.r"><i class="fa fa-check"></i><b>3.3.5.13</b> <code>build_x_dataset_location.R</code></a></li>
+<li class="chapter" data-level="3.3.5.14" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_medrec.r"><i class="fa fa-check"></i><b>3.3.5.14</b> <code>build_x_dataset_medrec.R</code></a></li>
+<li class="chapter" data-level="3.3.5.15" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_orders.r"><i class="fa fa-check"></i><b>3.3.5.15</b> <code>build_x_dataset_orders.R</code></a></li>
+<li class="chapter" data-level="3.3.5.16" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_patient.r"><i class="fa fa-check"></i><b>3.3.5.16</b> <code>build_x_dataset_patient.R</code></a></li>
+<li class="chapter" data-level="3.3.5.17" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_payor.r"><i class="fa fa-check"></i><b>3.3.5.17</b> <code>build_x_dataset_payor.R</code></a></li>
+<li class="chapter" data-level="3.3.5.18" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_physician.r"><i class="fa fa-check"></i><b>3.3.5.18</b> <code>build_x_dataset_physician.R</code></a></li>
+<li class="chapter" data-level="3.3.5.19" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_post_acute.r"><i class="fa fa-check"></i><b>3.3.5.19</b> <code>build_x_dataset_post_acute.R</code></a></li>
+<li class="chapter" data-level="3.3.5.20" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_prc.r"><i class="fa fa-check"></i><b>3.3.5.20</b> <code>build_x_dataset_prc.R</code></a></li>
+<li class="chapter" data-level="3.3.5.21" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_probable_adm_reason.r"><i class="fa fa-check"></i><b>3.3.5.21</b> <code>build_x_dataset_probable_adm_reason.R</code></a></li>
+<li class="chapter" data-level="3.3.5.22" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_problems.r"><i class="fa fa-check"></i><b>3.3.5.22</b> <code>build_x_dataset_problems.R</code></a></li>
+<li class="chapter" data-level="3.3.5.23" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_ris.r"><i class="fa fa-check"></i><b>3.3.5.23</b> <code>build_x_dataset_ris.R</code></a></li>
+<li class="chapter" data-level="3.3.5.24" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_rx.r"><i class="fa fa-check"></i><b>3.3.5.24</b> <code>build_x_dataset_rx.R</code></a></li>
+<li class="chapter" data-level="3.3.5.25" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_scores.r"><i class="fa fa-check"></i><b>3.3.5.25</b> <code>build_x_dataset_scores.R</code></a></li>
+<li class="chapter" data-level="3.3.5.26" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_surgical.r"><i class="fa fa-check"></i><b>3.3.5.26</b> <code>build_x_dataset_surgical.R</code></a></li>
+<li class="chapter" data-level="3.3.5.27" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_time.r"><i class="fa fa-check"></i><b>3.3.5.27</b> <code>build_x_dataset_time.R</code></a></li>
+<li class="chapter" data-level="3.3.5.28" data-path="stfrancis.html"><a href="stfrancis.html#build_x_dataset_uber_text.r"><i class="fa fa-check"></i><b>3.3.5.28</b> <code>build_x_dataset_uber_text.R</code></a></li>
+<li class="chapter" data-level="3.3.5.29" data-path="stfrancis.html"><a href="stfrancis.html#build_y_dataset_gmlos.r"><i class="fa fa-check"></i><b>3.3.5.29</b> <code>build_y_dataset_gmlos.R</code></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.6" data-path="stfrancis.html"><a href="stfrancis.html#rreports"><i class="fa fa-check"></i><b>3.3.6</b> <code>/r/reports</code></a><ul>
+<li class="chapter" data-level="3.3.6.1" data-path="stfrancis.html"><a href="stfrancis.html#current_house_report.r"><i class="fa fa-check"></i><b>3.3.6.1</b> <code>current_house_report.R</code></a></li>
+<li class="chapter" data-level="3.3.6.2" data-path="stfrancis.html"><a href="stfrancis.html#get_star_schema_data.r"><i class="fa fa-check"></i><b>3.3.6.2</b> <code>get_star_schema_data.R</code></a></li>
+<li class="chapter" data-level="3.3.6.3" data-path="stfrancis.html"><a href="stfrancis.html#los_reports.r"><i class="fa fa-check"></i><b>3.3.6.3</b> <code>LOS_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.4" data-path="stfrancis.html"><a href="stfrancis.html#model_reports.r"><i class="fa fa-check"></i><b>3.3.6.4</b> <code>model_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.5" data-path="stfrancis.html"><a href="stfrancis.html#observation_reports.r"><i class="fa fa-check"></i><b>3.3.6.5</b> <code>observation_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.6" data-path="stfrancis.html"><a href="stfrancis.html#post_acute_reports.r"><i class="fa fa-check"></i><b>3.3.6.6</b> <code>post_acute_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.7" data-path="stfrancis.html"><a href="stfrancis.html#ranker.r"><i class="fa fa-check"></i><b>3.3.6.7</b> <code>ranker.R</code></a></li>
+<li class="chapter" data-level="3.3.6.8" data-path="stfrancis.html"><a href="stfrancis.html#readmission_reports.r"><i class="fa fa-check"></i><b>3.3.6.8</b> <code>readmission_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.9" data-path="stfrancis.html"><a href="stfrancis.html#report_data.r"><i class="fa fa-check"></i><b>3.3.6.9</b> <code>report_data.R</code></a></li>
+<li class="chapter" data-level="3.3.6.10" data-path="stfrancis.html"><a href="stfrancis.html#run_reports.r"><i class="fa fa-check"></i><b>3.3.6.10</b> <code>run_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.11" data-path="stfrancis.html"><a href="stfrancis.html#star_schema_sf.r"><i class="fa fa-check"></i><b>3.3.6.11</b> <code>star_schema_sf.R</code></a></li>
+<li class="chapter" data-level="3.3.6.12" data-path="stfrancis.html"><a href="stfrancis.html#suggested_action_reports.r"><i class="fa fa-check"></i><b>3.3.6.12</b> <code>suggested_action_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.13" data-path="stfrancis.html"><a href="stfrancis.html#unit_reports.r"><i class="fa fa-check"></i><b>3.3.6.13</b> <code>unit_reports.R</code></a></li>
+<li class="chapter" data-level="3.3.6.14" data-path="stfrancis.html"><a href="stfrancis.html#user_reports.r"><i class="fa fa-check"></i><b>3.3.6.14</b> <code>user_reports.R</code></a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>4</b> Methods</a></li>
+<li class="chapter" data-level="5" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>5</b> Applications</a><ul>
+<li class="chapter" data-level="5.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>5.1</b> Example one</a></li>
+<li class="chapter" data-level="5.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>5.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Life2 Code Compendium</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="applications" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Applications</h1>
+<p>Some <em>significant</em> applications are demonstrated in this chapter.</p>
+<div id="example-one" class="section level2">
+<h2><span class="header-section-number">5.1</span> Example one</h2>
+</div>
+<div id="example-two" class="section level2">
+<h2><span class="header-section-number">5.2</span> Example two</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="final-words.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["code-inventory.pdf", "code-inventory.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

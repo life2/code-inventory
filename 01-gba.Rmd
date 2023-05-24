@@ -1,0 +1,1210 @@
+# Georgia Bankers Association {#gba}
+
+This document is intended to catalog and document all of the code for GBA as well as how to use it.
+
+
+## Notes / Questions
+
+- `futile.logger` is used for logging
+- What are the following datasets?
+  + AHH
+  + VBA - Claims processing company https://vbasoftware.com/
+  + XRF
+- Modeling is currently done with `randomForest`, but this is a memory hog. Investigate other options such as `xgboost` or maybe `lightgbm`.
+- Look into another option for parameters. `config` package?
+- Packages are loaded way too many times. Each separate function seems to load a package. Should be able to fix by creating a package and not sourcing functions.
+- There are many used packages with no real way to ensure versioning. Maybe use `renv`?
+- iRollDT does a lot of work... Examine
+- Date conversions with as.POSIXct seem very slow.
+- Futile Logger needs something to show section changes... **** SECTION ****?
+
+
+## Project Structure
+
+```{r struct_gba, echo=FALSE, comment=""}
+main_dir <- "C:/Users/Derek/Desktop/GBA"
+library(fs)
+dir_tree(main_dir, recurse = 1)
+```
+
+
+## `.ini` File
+
+This file contains all the needed parameters to create and run models. 
+
+```
+#
+#  Location to the GBA project
+#
+project_directory=E:/GCM/workspace/GBA
+#
+#	The working directory where intermediate preprocessed files
+#	are stored. (switch to your local copy)
+#
+working_directory=C:/R/GCM/GBA/DEV
+#
+#	The location for the archive directory, where RDS
+#	files used for production debugging is stored.  You
+#   may want to create a process to clean up this directory
+#   from time to time.
+#
+archive_dir=E:/GBA_temp/archive
+#
+#	The SQL user user ID used to connect to all of the database
+#	DSN's below.
+#
+db_uid=R_user
+#
+#  The password to use to connect to all the database DSN's below
+#
+db_pwd=8ASjKj9shn
+#
+#   The SQL server DSN containing the raw production input data that 
+#   is to be preprocessed and run through the models
+#
+db_dsn=GBA
+#
+#	The SQL server DSN for the database containing the external data
+#
+external_data_dsn=EXTERNAL_DATA
+#
+#  	The SQL server DSN for the database where all the model output
+#	is stored and that is used by the web user interface.
+#
+web_dsn=GBA_WEB
+#
+#  If in production, set live_data to TRUE.  For develop, set to FALSE.
+#
+live_data=FALSE
+#
+#  The number of days from the current date to process the predictions.  
+#  Normally this should be -1, to indicate yesterday.
+#
+offset_days=-1
+#
+#	The working directory where intermediate preprocessed files
+#	are stored.
+#
+rds_directory=C:/R/GCM/GBA/RDS
+#
+#  Where the GBA data has been FTP'd to and unzipped
+#
+raw_data_directory=G:/Paragon
+#
+#  dataset preprocessing settings
+#
+periodicity_days=13
+fix_sample_times=FALSE
+dev_start_date=2016-01-01
+dev_end_date=2021-02-01
+sample_from=policy_start_date
+sample_to=policy_end_date
+#
+#  log file settings
+#
+log_level=DEBUG
+log_file=GBA.log
+```
+
+## `R` Code
+
+```{r r_code_gba, warning=FALSE, results='asis', echo=FALSE}
+library(roxygen2)
+library(stringr)
+
+r_folder_name <- "R"
+
+r_dir <- file.path(main_dir, r_folder_name)
+
+load_order <- c("/R", "/R/model", "/R/arch", "/R/preprocessors", "/R/reporting",
+                "/R/data", "/R/rules", "/R/rules/defs", "/R/validate", "/R/dao", 
+                "/R/rule_defs", "/R/build_dataset")
+
+blocks_to_drop <- c("/R/import", "/R/run", "/R/sandbox", "/R/sandbox/import", 
+                    "/R/sandbox/reporting", "/R/sandbox/MJF", "/R/assessments")
+
+# get parsed source into roxygen-friendly format
+env <- new.env(parent = globalenv())
+all_files <- list.files(r_dir, full.names = TRUE, recursive = TRUE, pattern = "[.]R")
+block_names <- dirname(gsub(main_dir, "", all_files, fixed = TRUE))
+blocks_to_drop <- block_names %in% blocks_to_drop
+all_files <- all_files[!blocks_to_drop]
+block_names <- block_names[!blocks_to_drop]
+
+block_order <- sapply(block_names, function(x) which(load_order %in% x))
+block_order <- order(block_order, all_files)
+
+all_files <- all_files[block_order]
+block_names <- block_names[block_order]
+
+get_functions <- function(source_file, source_env = env) {
+  
+  blocks <- roxygen2::parse_file(source_file, source_env)
+  
+  get_title <- function(x) {
+    tags <- sapply(x[["tags"]], "[[", "tag")
+    call <- paste0("`", x[["call"]][2], "()` - ")
+    has_title <- which(tags == "title")
+    description <- ifelse(length(has_title),
+                          x[["tags"]][[has_title]][["raw"]],
+                          "")
+    description <- str_squish(str_replace_all(description, "\n", " "))
+    paste0(call, description)
+  }
+  
+  sapply(blocks, get_title)
+}
+
+all_functions <- sapply(all_files, get_functions)
+
+current_name <- ""
+for (i in seq_along(all_functions)) {
+  if(block_names[i] != current_name) {
+    cat(paste0("### `", block_names[i], "`"))
+    cat("\n\n")
+  }
+  current_name <- block_names[i]
+  cat(paste0("#### `", basename(all_files[i]), "`"))
+  cat("\n\n")
+  cat(paste0("- ", all_functions[[i]]), sep = "\n")
+  cat("\n\n")
+}
+
+to_install <- c("anytime", "caTools", "comorbidity", "data.table", "devtools", 
+                "digest", "doSNOW", "ff", "foreach", "futile.logger", "geosphere", 
+                "ggplot2", "gRain", "hash", "hexbin", "Hmisc", "latticeExtra", 
+                "lme4", "lubridate", "medicalrisk", "mRMRe", "ngram", "nlme", 
+                "openxlsx", "pcaPP", "PerformanceAnalytics", "plyr", "randomForest", 
+                "rattle", "Rcmdr", "RCurl", "reshape2", "rJava", "RMySQL", "RODBC", 
+                "roxygen2", "safer", "scales", "shiny", "Snowball", "SnowballC", 
+                "sqldf", "stringdist", "stringi", "stringr", "timeSeries", "tm", 
+                "topicmodels", "TTR", "twang", "xlsx", "XML", "xts", "zoo")
+```
+
+
+### `/R/main.R` - Creates a number of high level functions used to invoke lower level functions
+### `R/model/` - Functions for creating the models
+
+### `R/arch/setup_R.R`
+
+Installed Packages | Via
+-------------------|----
+digest  | CRAN
+devtools  | CRAN
+plyr  | CRAN
+reshape2  | CRAN
+RODBC  | CRAN
+geosphere  | CRAN
+ggplot2  | CRAN
+Hmisc  | CRAN
+zoo  | CRAN
+timeSeries  | CRAN
+foreach  | CRAN
+RMySQL  | CRAN
+TTR  | CRAN
+PerformanceAnalytics  | CRAN
+twang  | CRAN
+zoo  | CRAN
+xts  | CRAN
+stringr  | CRAN
+stringi  | CRAN
+Rcmdr  | CRAN
+latticeExtra  | CRAN
+rattle  | CRAN
+lme4  | CRAN
+nlme  | CRAN
+ff  | CRAN
+rJava  | CRAN
+tm  | CRAN
+Snowball  | CRAN
+futile.logger  | CRAN
+xlsx  | CRAN
+medicalrisk  | CRAN
+SnowballC  | CRAN
+gRain  | CRAN
+shiny  | github
+roxygen2  | CRAN
+pcaPP  | CRAN
+lubridate  | CRAN
+scales  | CRAN
+data.table  | CRAN
+doSNOW  | CRAN
+topicmodels  | CRAN
+mRMRe  | CRAN
+hash  | CRAN
+ngram  | CRAN
+sqldf  | CRAN
+randomForest  | CRAN
+caTools  | CRAN
+hexbin  | CRAN
+stringdist  | CRAN
+anytime  | CRAN
+openxlsx  | CRAN
+XML  | CRAN
+RCurl  | CRAN
+safer  | CRAN
+comorbidity  | CRAN
+imidexR2  | "F:/imidex.working/imidexR2/imidexR2_4.9.0.zip"
+
+
+## Usage
+
+1. Setup .ini file located in `/GBA/R/ini`
+2. Build iv/dv datasets by calling `build_dataset_version()`
+    + creates a new DEV folder in `C:/R/GBA`
+    + calls `ppd <- preprocess_data(params)` which builds the iv/dv per `.ini` file settings, dev or prod; if dev, builds using dev start and end dates
+    + saves the iv and dv files as RDS files to the new DEV folder
+3. To build hospitalization models:
+    + option: to change reported quantiles, within `build_hospitalization_models()` in `build.R`, change quantiles parameter to 10 or 20 (save and `load_libraries(params)`)
+    + call `build_hospitalization_models()`
+      + this will automatically save all model files to the DEV folder created in step 2
+      + this will take roughly 60 - 65 hours to complete
+4. To build med clam paid amt models:
+    + option: to change reported quantiles, within `build_med_claim_models()` in `build.R`, change quantiles parameter to 10 or 20 (save and `load_libraries(params)`)
+    + call `build_med_claim_models()`
+      + this will automatically save all model files to the DEV folder created in step 2
+      + this will take roughly 60 - 65 hours to complete
+5. To build models from a specific DEV number:
+    + call 
+		  ```
+		  build_version_models(
+		  	version= 10 # integer of version number
+			  ,DV_names=c(
+				  "dv_med_claim_paid_amt_sum_t90"   
+				  ,"dv_hospitalization_event_sum_t90" # strings of dvs to train
+			  )
+			  ,quantiles=10 # number of quantiles
+		  )
+		  ```
+    + 2nd level model shortcuts have been built using this function and can be found in `build.R`
+
+### Preprocess Log
+
+```{r gba-build-dataset, eval=FALSE}
+project_base_dir <- "C:/Users/Derek/Desktop/GBA"
+
+source(file.path(project_base_dir, "R/main.R"))
+
+# This is a good start
+# params2 <- config::get("databases", file = file.path(project_base_dir,"ini/GBA_DEV_DM.yml"), use_parent = FALSE)
+
+params <- 
+  get_params_from_file(
+    file.path(project_base_dir,"ini/GBA_DEV_DM.ini"),
+    setup_logging = FALSE,
+	  setup_db = FALSE
+    )
+
+load_libraries(params)
+
+params <- connect_to_dbs(params)
+mrr_csv_filename <- "C:/Users/Derek/Desktop/gba_outbound_reports/sample_mrr.csv"
+blr_csv_filename <- "C:/Users/Derek/Desktop/gba_outbound_reports/sample_blr.csv"
+
+start_time <- Sys.time()
+ppd <- preprocess_data(params);
+iv_file <- file.path(params$working_directory, "iv.RDS")
+gc()
+dv_file <- file.path(params$working_directory, "dv.RDS")
+gc()
+#	
+flog.info("Saving independent variables to %s",iv_file);
+saveRDS(ppd$iv,iv_file);
+flog.info("Saving dependent variables to %s",dv_file);
+saveRDS(ppd$dv,dv_file);
+gc()
+#return(list(iv_file=iv_file,dv_file=dv_file));
+end_time <- Sys.time()
+flog.info(paste0("Total run time: ",end_time-start_time))
+
+```
+
+
+```
+INFO [2021-05-14 09:04:38] Loading supplemental data from C:/Users/Derek/Desktop/GBA
+INFO [2021-05-14 09:04:38] Connecting to:
+INFO [2021-05-14 09:04:38] Microsoft SQL Server
+INFO [2021-05-14 09:04:38] 13.00.4206
+INFO [2021-05-14 09:04:38] 03.80
+INFO [2021-05-14 09:04:38] GBA
+INFO [2021-05-14 09:04:38] sqlncli11.dll
+INFO [2021-05-14 09:04:38] 11.00.7001
+INFO [2021-05-14 09:04:38] 03.80.0000
+INFO [2021-05-14 09:04:38] 06EYRAD\MSSQLSERVER16
+INFO [2021-05-14 09:04:38] Microsoft SQL Server
+INFO [2021-05-14 09:04:38] 13.00.4206
+INFO [2021-05-14 09:04:38] 03.80
+INFO [2021-05-14 09:04:38] EXTERNAL_DATA
+INFO [2021-05-14 09:04:38] msodbcsql13.dll
+INFO [2021-05-14 09:04:38] 14.00.1000
+INFO [2021-05-14 09:04:38] 03.80.0000
+INFO [2021-05-14 09:04:38] 06EYRAD\MSSQLSERVER16
+INFO [2021-05-14 09:04:38] Microsoft SQL Server
+INFO [2021-05-14 09:04:38] 13.00.4206
+INFO [2021-05-14 09:04:38] 03.80
+INFO [2021-05-14 09:04:38] GBA_WEB
+INFO [2021-05-14 09:04:38] sqlncli11.dll
+INFO [2021-05-14 09:04:38] 11.00.7001
+INFO [2021-05-14 09:04:38] 03.80.0000
+INFO [2021-05-14 09:04:38] 06EYRAD\MSSQLSERVER16
+INFO [2021-05-14 09:04:38] Preprocessing data
+INFO [2021-05-14 09:04:38] Building dependent variables for longitudinal dataset
+INFO [2021-05-14 09:04:38] Building dv with only med coverage members
+INFO [2021-05-14 09:04:38] Capping dv_med_claim_paid_amt_sum_t90 to $31000
+INFO [2021-05-14 09:04:38] Capping dv_med_claim_paid_amt_sum_t365 to $107000
+INFO [2021-05-14 09:04:38] Getting eligibility data from DB
+INFO [2021-05-14 09:04:43] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:04:43] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:05:04] Data coerced
+INFO [2021-05-14 09:05:04] Creating roll columns
+INFO [2021-05-14 09:05:05] Getting SSN lookup
+INFO [2021-05-14 09:05:06] Encrypting SSN
+INFO [2021-05-14 09:05:16] Getting only members subscribed in a medical plan
+INFO [2021-05-14 09:05:16] Returning members subscribed in a medical plan
+INFO [2021-05-14 09:05:16] Returning 37506 unique members and 233788 rows
+INFO [2021-05-14 09:05:16] Getting med claim data from DB
+INFO [2021-05-14 09:07:46] Retrieved 3139370 med claim records
+INFO [2021-05-14 09:07:46] Coercing data col types for 'med claim' data
+INFO [2021-05-14 09:13:02] Data coerced
+INFO [2021-05-14 09:13:02] Getting AS400 med claim data from DB
+INFO [2021-05-14 09:13:40] Retrieved 905504 AS400 med claim records
+INFO [2021-05-14 09:13:40] Adding descriptions for diagnoses and procedures
+INFO [2021-05-14 09:13:54] Adding NA column Batch_Number to AS400 claims
+INFO [2021-05-14 09:13:54] Adding NA column Batch_Claim to AS400 claims
+INFO [2021-05-14 09:13:54] Adding NA column Claim_Service_Date to AS400 claims
+INFO [2021-05-14 09:13:54] Adding NA column Diagnostic_Code_Type to AS400 claims
+INFO [2021-05-14 09:14:01] Adding NA column COB_Amt to AS400 claims
+INFO [2021-05-14 09:14:01] Adding NA column Co_Pay_Amt to AS400 claims
+INFO [2021-05-14 09:14:01] Adding NA column Co_Ins_Amt to AS400 claims
+INFO [2021-05-14 09:14:01] Adding NA column Deductible_Amt to AS400 claims
+INFO [2021-05-14 09:14:01] Adding NA column Not_Covered_Amt to AS400 claims
+INFO [2021-05-14 09:14:02] Adding NA column Modifier_2 to AS400 claims
+INFO [2021-05-14 09:14:02] Adding NA column Modifier_3 to AS400 claims
+INFO [2021-05-14 09:14:02] Adding NA column Modifier_4 to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Check_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Check_Batch to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Check_Batch_Date to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Check_Number to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Unique_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Federal_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column PlanType_Description to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Request_Date to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Adjustment_Claim to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Refund_Claim to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Subscriber_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Member_Seq to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Group_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Group_Name to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Division_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Division_Name to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column Network_ID to AS400 claims
+INFO [2021-05-14 09:14:04] Adding NA column NetworkDescription to AS400 claims
+INFO [2021-05-14 09:14:06] Adding NA column Age_At_Report_Date to AS400 claims
+INFO [2021-05-14 09:14:06] Adding NA column Age_At_Service_Date to AS400 claims
+INFO [2021-05-14 09:14:06] Adding NA column Age_At_Paid_Date to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Place_Of_Service_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Relationship_Code to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Relationship_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Benefit_Code to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Provider_Type_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Received_Date to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Repriced_Network_ID to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Repriced_NetworkDescription to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code1 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code1_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code2 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code2_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code3 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code3_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code4 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Ex_Code4_Description to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Drug_Code to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column POA to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column NPI to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code3 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description3 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code4 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description4 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code5 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description5 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code6 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description6 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code7 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description7 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code8 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description8 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code9 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description9 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code10 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description10 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code11 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description11 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diagnostic_Code12 to AS400 claims
+INFO [2021-05-14 09:14:07] Adding NA column Diag_Description12 to AS400 claims
+INFO [2021-05-14 09:14:39] Creating roll columns
+INFO [2021-05-14 09:14:41] Getting eligibility data from DB
+INFO [2021-05-14 09:14:44] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:14:44] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:15:04] Data coerced
+INFO [2021-05-14 09:15:05] Getting SSN lookup
+INFO [2021-05-14 09:15:14] 97.2% of med claim records have a member in eligibility. OK.
+INFO [2021-05-14 09:15:14] Encrypting SSN
+INFO [2021-05-14 09:16:07] Matching column names to original med_claim db
+INFO [2021-05-14 09:16:07] Setting grouped diagnoses
+INFO [2021-05-14 09:16:09] Getting grouped medical diagnoses from ccs_dx_icd10cm_2019_1
+INFO [2021-05-14 09:16:09] Getting grouped medical diagnoses from ccs_multi_dx_tool_2015
+INFO [2021-05-14 09:16:36] Returning data table with diagnoses grouping columns
+INFO [2021-05-14 09:16:36] Getting RX data from DB
+INFO [2021-05-14 09:17:26] Retrieved 1961672 RX records
+INFO [2021-05-14 09:17:26] Coercing data col types for 'rx' data
+INFO [2021-05-14 09:19:39] Data coerced
+INFO [2021-05-14 09:19:44] Creating roll columns
+INFO [2021-05-14 09:19:44] Getting eligibility data from DB
+INFO [2021-05-14 09:19:47] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:19:47] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:20:07] Data coerced
+INFO [2021-05-14 09:20:07] Creating roll columns
+INFO [2021-05-14 09:20:08] Getting SSN lookup
+INFO [2021-05-14 09:20:09] Encrypting SSN
+INFO [2021-05-14 09:20:46] 91% of rx records have a member in eligibility. OK.
+INFO [2021-05-14 09:23:33] Subsetting data to a periodicity of every 13 days
+INFO [2021-05-14 09:23:33] 88486 rows in dataset
+INFO [2021-05-14 09:23:33] Calculating target data: Future Incurred
+INFO [2021-05-14 09:23:43] Calculating target data: Change in Incurred
+INFO [2021-05-14 09:23:52] Calculating target data: Future Incurred per dx group
+INFO [2021-05-14 09:24:20] Calculating target data: Future Hospitalizations
+INFO [2021-05-14 09:24:47] Calculating target data: Future Emergency Room Visits
+INFO [2021-05-14 09:25:10] Adding Wellview indicator
+INFO [2021-05-14 09:25:10] Getting data Wellview enrollment dates
+INFO [2021-05-14 09:25:10] Getting Wellview data from DB
+INFO [2021-05-14 09:25:10] Retrieved 21234 wellview_Participants records
+INFO [2021-05-14 09:25:10] Coercing data col types for 'wellview_Participants' data
+INFO [2021-05-14 09:25:12] Data coerced
+INFO [2021-05-14 09:25:12] Creating roll columns
+INFO [2021-05-14 09:25:12] Getting eligibility data from DB
+INFO [2021-05-14 09:25:15] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:25:15] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:25:35] Data coerced
+INFO [2021-05-14 09:25:35] Creating roll columns
+INFO [2021-05-14 09:25:36] Getting SSN lookup
+INFO [2021-05-14 09:25:36] Encrypting SSN
+INFO [2021-05-14 09:25:48] 94.5% of wellview_Participants records have a member in eligibility. OK.
+INFO [2021-05-14 09:25:48] Adding case management indicator
+INFO [2021-05-14 09:25:48] Getting case management dates
+INFO [2021-05-14 09:25:49] Getting case management data from DB
+INFO [2021-05-14 09:25:49] Retrieved 44894 case_mgmt records
+INFO [2021-05-14 09:25:49] Coercing data col types for 'case_management' data
+INFO [2021-05-14 09:25:54] Data coerced
+INFO [2021-05-14 09:25:54] Creating roll columns
+INFO [2021-05-14 09:25:54] Getting eligibility data from DB
+INFO [2021-05-14 09:25:57] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:25:57] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:26:18] Data coerced
+INFO [2021-05-14 09:26:18] Creating roll columns
+INFO [2021-05-14 09:26:19] Getting SSN lookup
+INFO [2021-05-14 09:26:19] Encrypting SSN
+INFO [2021-05-14 09:26:30] 97.4% of case mgmt records have a member in eligibility. OK.
+INFO [2021-05-14 09:26:30] Fanning out case management dates
+INFO [2021-05-14 09:26:34] NA'ing out incomplete window periods
+INFO [2021-05-14 09:26:36] Longitudinal dataset created
+INFO [2021-05-14 09:26:36] dv number of rows: 88486
+INFO [2021-05-14 09:26:36] dv number of columns: 70
+INFO [2021-05-14 09:26:36] dv unique person_ids: 17813
+INFO [2021-05-14 09:26:36] dv min sample_date: 2021-01-01
+INFO [2021-05-14 09:26:36] dv max sample_date: 2021-02-22
+INFO [2021-05-14 09:26:40] Executing pp_iv_med_claim (mem size 269).
+INFO [2021-05-14 09:26:40] Preprocessing medical claims
+INFO [2021-05-14 09:26:40] Getting med claim data from DB
+INFO [2021-05-14 09:28:25] Retrieved 3139370 med claim records
+INFO [2021-05-14 09:28:25] Coercing data col types for 'med claim' data
+INFO [2021-05-14 09:33:35] Data coerced
+INFO [2021-05-14 09:33:35] Getting AS400 med claim data from DB
+INFO [2021-05-14 09:34:15] Retrieved 905504 AS400 med claim records
+INFO [2021-05-14 09:34:15] Adding descriptions for diagnoses and procedures
+INFO [2021-05-14 09:34:26] Adding NA column Batch_Number to AS400 claims
+INFO [2021-05-14 09:34:26] Adding NA column Batch_Claim to AS400 claims
+INFO [2021-05-14 09:34:26] Adding NA column Claim_Service_Date to AS400 claims
+INFO [2021-05-14 09:34:26] Adding NA column Diagnostic_Code_Type to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column COB_Amt to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Co_Pay_Amt to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Co_Ins_Amt to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Deductible_Amt to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Not_Covered_Amt to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Modifier_2 to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Modifier_3 to AS400 claims
+INFO [2021-05-14 09:34:31] Adding NA column Modifier_4 to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Check_ID to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Check_Batch to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Check_Batch_Date to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Check_Number to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Unique_ID to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Federal_ID to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column PlanType_Description to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Request_Date to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Adjustment_Claim to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Refund_Claim to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Subscriber_ID to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Member_Seq to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Group_ID to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Group_Name to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Division_ID to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Division_Name to AS400 claims
+INFO [2021-05-14 09:34:33] Adding NA column Network_ID to AS400 claims
+INFO [2021-05-14 09:34:34] Adding NA column NetworkDescription to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Age_At_Report_Date to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Age_At_Service_Date to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Age_At_Paid_Date to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Place_Of_Service_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Relationship_Code to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Relationship_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Benefit_Code to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Provider_Type_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Received_Date to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Repriced_Network_ID to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Repriced_NetworkDescription to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code1 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code1_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code2 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code2_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code3 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code3_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code4 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Ex_Code4_Description to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Drug_Code to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column POA to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column NPI to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code3 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description3 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code4 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description4 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code5 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description5 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code6 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description6 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code7 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description7 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code8 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description8 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code9 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description9 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code10 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description10 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code11 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description11 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diagnostic_Code12 to AS400 claims
+INFO [2021-05-14 09:34:36] Adding NA column Diag_Description12 to AS400 claims
+INFO [2021-05-14 09:35:08] Creating roll columns
+INFO [2021-05-14 09:35:10] Getting eligibility data from DB
+INFO [2021-05-14 09:35:13] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:35:13] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:35:33] Data coerced
+INFO [2021-05-14 09:35:34] Getting SSN lookup
+INFO [2021-05-14 09:35:42] 97.2% of med claim records have a member in eligibility. OK.
+INFO [2021-05-14 09:35:42] Encrypting SSN
+INFO [2021-05-14 09:36:43] Matching column names to original med_claim db
+INFO [2021-05-14 09:36:43] Setting additional cols for med_claim
+INFO [2021-05-14 09:36:43] Setting grouped procedures
+INFO [2021-05-14 09:36:43] Getting grouped medical procedure codes from C:/Users/Derek/Desktop/GBA/resource/coding/medical_codes.xlsx.
+INFO [2021-05-14 09:36:48] Returning data table with procedure grouping columns
+INFO [2021-05-14 09:36:48] Returning 3828469 from setting grouped procedures
+INFO [2021-05-14 09:36:48] Setting grouped preventative procedures
+INFO [2021-05-14 09:36:48] Getting preventative procedure reference from C:/Users/Derek/Desktop/GBA/resource/coding/preventative_treatments.xlsx
+INFO [2021-05-14 09:36:52] Returning data table with preventative procedure columns
+INFO [2021-05-14 09:36:52] Returning 3828469 from setting preventative procedures
+INFO [2021-05-14 09:36:52] Fixing provider zip codes
+INFO [2021-05-14 09:36:53] Returning med_claim with appropriate provider zip codes
+INFO [2021-05-14 09:36:53] Returning 3828469 from fixing zip codes
+INFO [2021-05-14 09:36:53] Setting distance to provider
+INFO [2021-05-14 09:36:53] Getting member zip codes from eligibility
+INFO [2021-05-14 09:36:53] Getting eligibility data from DB
+INFO [2021-05-14 09:36:57] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:36:57] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:37:19] Data coerced
+INFO [2021-05-14 09:37:19] Creating roll columns
+INFO [2021-05-14 09:37:19] Getting SSN lookup
+INFO [2021-05-14 09:37:20] Encrypting SSN
+INFO [2021-05-14 09:37:42] Rows of med_claim after elig merge: 3828469
+INFO [2021-05-14 09:37:42] Getting zip centroids from zip_code_database table in SQL
+INFO [2021-05-14 09:37:47] Rows of med_claim after zip merge: 3828469
+INFO [2021-05-14 09:37:57] Rows of med_claim after zip merge: 3828469
+INFO [2021-05-14 09:37:57] Calculating distance to provider
+INFO [2021-05-14 09:38:05] Rows of med_claim at end: 3828469
+INFO [2021-05-14 09:38:05] Returning med_claim with distance to provider column
+INFO [2021-05-14 09:38:05] Returning 3828469 from setting zip distance
+INFO [2021-05-14 09:38:05] Returning med_claim with specified additional columns
+INFO [2021-05-14 09:38:05] Melting diagnosis columns from med_claim
+INFO [2021-05-14 09:38:07] Returning multiple diagnoses dt
+INFO [2021-05-14 09:38:07] Setting additional cols for multiple_dx_dt
+INFO [2021-05-14 09:38:07] Setting grouped diagnoses
+INFO [2021-05-14 09:38:14] Getting grouped medical diagnoses from ccs_dx_icd10cm_2019_1
+INFO [2021-05-14 09:38:14] Getting grouped medical diagnoses from ccs_multi_dx_tool_2015
+INFO [2021-05-14 09:38:24] Returning data table with diagnoses grouping columns
+INFO [2021-05-14 09:38:24] Setting comorbidities
+INFO [2021-05-14 09:39:15] Calculating comorbidities
+INFO [2021-05-14 09:39:58] Returning data table with comorbidity columns
+INFO [2021-05-14 09:39:58] Returning data table with specified additional columns
+INFO [2021-05-14 09:39:58] Rolling paid_amt
+INFO [2021-05-14 09:40:10] Rolling procedure category groupings
+Loading required package: reshape2
+INFO [2021-05-14 09:42:45] Rolling latest procedure category groupings
+INFO [2021-05-14 09:43:12] Rolling multiple diagnosis groupings
+INFO [2021-05-14 09:45:25] Rolling latest diagnosis category groupings
+INFO [2021-05-14 09:45:58] Rolling chunked comorbidities
+INFO [2021-05-14 09:46:05] Rolling comorbidities
+INFO [2021-05-14 09:46:05] Rolling comorbidity columns
+INFO [2021-05-14 09:47:00] Calculating comorbidity scores
+INFO [2021-05-14 09:47:00] Calculating comorbidity scores
+INFO [2021-05-14 09:47:03] Completed 1 of 1 chunks
+INFO [2021-05-14 09:47:04] Rolling benefit descriptions
+INFO [2021-05-14 09:47:44] Rolling place of service
+INFO [2021-05-14 09:48:02] Rolling provider type
+INFO [2021-05-14 09:48:34] Getting provider procedure counts
+INFO [2021-05-14 09:48:57] Rolling provider procedure counts
+INFO [2021-05-14 09:49:03] Getting preventative procedures
+INFO [2021-05-14 09:49:03] Getting eligibility data from DB
+INFO [2021-05-14 09:49:06] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:49:06] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:49:26] Data coerced
+INFO [2021-05-14 09:49:26] Creating roll columns
+INFO [2021-05-14 09:49:27] Getting SSN lookup
+INFO [2021-05-14 09:49:28] Encrypting SSN
+INFO [2021-05-14 09:49:39] Getting eligibility plan description
+INFO [2021-05-14 09:49:40] Returning eligibility with plan description column
+INFO [2021-05-14 09:49:41] Creating age and gender ref for preventative procedures
+INFO [2021-05-14 09:49:41] Getting preventative procedure reference from C:/Users/Derek/Desktop/GBA/resource/coding/preventative_treatments.xlsx
+INFO [2021-05-14 09:49:41] Returning data table with preventative prc conditionals
+INFO [2021-05-14 09:49:43] Rolling latest preventative procedure categories
+INFO [2021-05-14 09:49:43] Getting conditional preventative procedure rules
+INFO [2021-05-14 09:49:47] Rolling total preventative procedures
+INFO [2021-05-14 09:49:55] Creating age and gender ref for preventative procedures
+INFO [2021-05-14 09:49:55] Getting preventative procedure reference from C:/Users/Derek/Desktop/GBA/resource/coding/preventative_treatments.xlsx
+INFO [2021-05-14 09:49:55] Returning data table with preventative prc conditionals
+INFO [2021-05-14 09:49:57] Rolling distance to provider
+INFO [2021-05-14 09:50:14] Med claim IV dataset created: 88486 rows and 5929 candidate independent variables
+INFO [2021-05-14 09:50:16] Executing pp_iv_dental_claim (mem size 4324).
+INFO [2021-05-14 09:50:17] Preprocessing dental claim
+INFO [2021-05-14 09:50:17] Getting dental claims
+INFO [2021-05-14 09:50:17] Getting med claim data from DB
+INFO [2021-05-14 09:52:09] Retrieved 3139370 med claim records
+INFO [2021-05-14 09:52:09] Coercing data col types for 'med claim' data
+INFO [2021-05-14 09:57:24] Data coerced
+INFO [2021-05-14 09:57:24] Getting AS400 med claim data from DB
+INFO [2021-05-14 09:58:02] Retrieved 905504 AS400 med claim records
+INFO [2021-05-14 09:58:02] Adding descriptions for diagnoses and procedures
+INFO [2021-05-14 09:58:17] Adding NA column Batch_Number to AS400 claims
+INFO [2021-05-14 09:58:17] Adding NA column Batch_Claim to AS400 claims
+INFO [2021-05-14 09:58:17] Adding NA column Claim_Service_Date to AS400 claims
+INFO [2021-05-14 09:58:18] Adding NA column Diagnostic_Code_Type to AS400 claims
+INFO [2021-05-14 09:58:26] Adding NA column COB_Amt to AS400 claims
+INFO [2021-05-14 09:58:26] Adding NA column Co_Pay_Amt to AS400 claims
+INFO [2021-05-14 09:58:26] Adding NA column Co_Ins_Amt to AS400 claims
+INFO [2021-05-14 09:58:26] Adding NA column Deductible_Amt to AS400 claims
+INFO [2021-05-14 09:58:26] Adding NA column Not_Covered_Amt to AS400 claims
+INFO [2021-05-14 09:58:27] Adding NA column Modifier_2 to AS400 claims
+INFO [2021-05-14 09:58:27] Adding NA column Modifier_3 to AS400 claims
+INFO [2021-05-14 09:58:27] Adding NA column Modifier_4 to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Check_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Check_Batch to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Check_Batch_Date to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Check_Number to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Unique_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Federal_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column PlanType_Description to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Request_Date to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Adjustment_Claim to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Refund_Claim to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Subscriber_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Member_Seq to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Group_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Group_Name to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Division_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Division_Name to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column Network_ID to AS400 claims
+INFO [2021-05-14 09:58:29] Adding NA column NetworkDescription to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Age_At_Report_Date to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Age_At_Service_Date to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Age_At_Paid_Date to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Place_Of_Service_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Relationship_Code to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Relationship_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Benefit_Code to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Provider_Type_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Received_Date to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Repriced_Network_ID to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Repriced_NetworkDescription to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code1 to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code1_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code2 to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code2_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code3 to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code3_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code4 to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Ex_Code4_Description to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column Drug_Code to AS400 claims
+INFO [2021-05-14 09:58:31] Adding NA column POA to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column NPI to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code3 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description3 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code4 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description4 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code5 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description5 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code6 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description6 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code7 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description7 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code8 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description8 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code9 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description9 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code10 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description10 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code11 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description11 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diagnostic_Code12 to AS400 claims
+INFO [2021-05-14 09:58:32] Adding NA column Diag_Description12 to AS400 claims
+INFO [2021-05-14 09:59:02] Creating roll columns
+INFO [2021-05-14 09:59:04] Getting eligibility data from DB
+INFO [2021-05-14 09:59:07] Retrieved 250172 eligibility records
+INFO [2021-05-14 09:59:07] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 09:59:27] Data coerced
+INFO [2021-05-14 09:59:28] Getting SSN lookup
+INFO [2021-05-14 09:59:33] 97.2% of med claim records have a member in eligibility. OK.
+INFO [2021-05-14 09:59:33] Encrypting SSN
+INFO [2021-05-14 10:00:35] Matching column names to original med_claim db
+INFO [2021-05-14 10:00:35] Getting grouped dental procedure codes from C:/Users/Derek/Desktop/GBA/resource/coding/dental_codes.xlsx.
+INFO [2021-05-14 10:00:36] Returning dental claims
+INFO [2021-05-14 10:00:36] Preprocessing dental claim: paid amount
+INFO [2021-05-14 10:00:41] Preprocessing dental claim: procedure category level 1
+INFO [2021-05-14 10:00:44] Preprocessing dental claim: procedure category level 2
+INFO [2021-05-14 10:00:47] Preprocessing dental claim: days since category 1 procedure
+INFO [2021-05-14 10:00:48] Preprocessing dental claim: days since category 2 procedure
+INFO [2021-05-14 10:00:49] Preprocessing dental claim: days since category 3 procedure
+INFO [2021-05-14 10:00:54] Dental claim IV dataset created: 88486 rows and 424 candidate independent variables
+INFO [2021-05-14 10:00:54] Executing pp_iv_rx (mem size 4753).
+INFO [2021-05-14 10:00:55] Preprocessing medications
+INFO [2021-05-14 10:00:55] Getting RX data from DB
+INFO [2021-05-14 10:01:41] Retrieved 1961672 RX records
+INFO [2021-05-14 10:01:41] Coercing data col types for 'rx' data
+INFO [2021-05-14 10:03:58] Data coerced
+INFO [2021-05-14 10:04:03] Creating roll columns
+INFO [2021-05-14 10:04:03] Getting eligibility data from DB
+INFO [2021-05-14 10:04:06] Retrieved 250172 eligibility records
+INFO [2021-05-14 10:04:06] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 10:04:28] Data coerced
+INFO [2021-05-14 10:04:28] Creating roll columns
+INFO [2021-05-14 10:04:28] Getting SSN lookup
+INFO [2021-05-14 10:04:31] Encrypting SSN
+INFO [2021-05-14 10:05:00] 91% of rx records have a member in eligibility. OK.
+INFO [2021-05-14 10:05:13] Getting NDC product
+INFO [2021-05-14 10:05:13] Loading 'C:/Users/Derek/Desktop/GBA/resource/rx/product.xlsx'
+INFO [2021-05-14 10:05:14] Sheet 'product'
+INFO [2021-05-14 10:05:18] Retrieved 90612 records
+INFO [2021-05-14 10:05:18] Creating column for merging with RX claims
+INFO [2021-05-14 10:05:22] Creating EPC and MOA columns
+Loading required package: tm
+Loading required package: plyr
+Loading required package: SnowballC
+Loading required package: topicmodels
+  |===============================================================================================================| 100%
+  |===============================================================================================================| 100%
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:05:57] Creating substance name columns
+  |===============================================================================================================| 100%
+  |===============================================================================================================| 100%
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:11:12] Creating route name columns
+  |===============================================================================================================| 100%
+  |===============================================================================================================| 100%
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:14:30] Preprocessing medications: plan paid amount
+INFO [2021-05-14 10:14:34] Preprocessing medications: substance name
+INFO [2021-05-14 10:14:37] Processing chunk 1 using indexes from 1 to 201 out of 1188.
+INFO [2021-05-14 10:14:54] Processing chunk 2 using indexes from 202 to 402 out of 1188.
+INFO [2021-05-14 10:15:12] Processing chunk 3 using indexes from 403 to 603 out of 1188.
+INFO [2021-05-14 10:15:30] Processing chunk 4 using indexes from 604 to 804 out of 1188.
+INFO [2021-05-14 10:15:48] Processing chunk 5 using indexes from 805 to 1005 out of 1188.
+INFO [2021-05-14 10:16:10] Processing chunk 6 using indexes from 1006 to 1188 out of 1188.
+INFO [2021-05-14 10:16:33] Preprocessing medications: route of administration
+INFO [2021-05-14 10:16:33] Processing chunk 1 using indexes from 1 to 40 out of 40.
+INFO [2021-05-14 10:16:40] Preprocessing medications: DEA schedule
+INFO [2021-05-14 10:16:40] Processing chunk 1 using indexes from 1 to 6 out of 6.
+INFO [2021-05-14 10:16:45] Preprocessing medications: pills per day
+INFO [2021-05-14 10:16:49] Preprocessing medications: fill count
+INFO [2021-05-14 10:16:53] Preprocessing medications: concurrent meds
+INFO [2021-05-14 10:17:00] Preprocessing medications: EPC/MOA
+INFO [2021-05-14 10:17:05] Processing chunk 1 using indexes from 1 to 201 out of 1151.
+INFO [2021-05-14 10:17:22] Processing chunk 2 using indexes from 202 to 402 out of 1151.
+INFO [2021-05-14 10:17:41] Processing chunk 3 using indexes from 403 to 603 out of 1151.
+INFO [2021-05-14 10:18:02] Processing chunk 4 using indexes from 604 to 804 out of 1151.
+INFO [2021-05-14 10:18:21] Processing chunk 5 using indexes from 805 to 1005 out of 1151.
+INFO [2021-05-14 10:18:39] Processing chunk 6 using indexes from 1006 to 1151 out of 1151.
+INFO [2021-05-14 10:21:13] Preprocessing medications: days since pharm class
+INFO [2021-05-14 10:21:52] Medications IV dataset created: 88486 rows and 5471 candidate independent variables
+INFO [2021-05-14 10:22:12] Executing pp_iv_wellview (mem size 6974).
+INFO [2021-05-14 10:22:13] Preprocessing Wellview data
+INFO [2021-05-14 10:22:13] Getting eligibility data from DB
+INFO [2021-05-14 10:22:16] Retrieved 250172 eligibility records
+INFO [2021-05-14 10:22:16] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 10:22:37] Data coerced
+INFO [2021-05-14 10:22:37] Creating roll columns
+INFO [2021-05-14 10:22:37] Getting SSN lookup
+INFO [2021-05-14 10:22:38] Encrypting SSN
+INFO [2021-05-14 10:22:48] Getting Wellview data from DB
+INFO [2021-05-14 10:22:49] Retrieved 21234 wellview_Participants records
+INFO [2021-05-14 10:22:49] Coercing data col types for 'wellview_Participants' data
+INFO [2021-05-14 10:22:50] Data coerced
+INFO [2021-05-14 10:22:50] Creating roll columns
+INFO [2021-05-14 10:22:52] 94.5% of wellview_Participants records have a member in eligibility. OK.
+INFO [2021-05-14 10:22:52] Getting Wellview data from DB
+INFO [2021-05-14 10:22:52] Retrieved 41678 wellview_Appointments records
+INFO [2021-05-14 10:22:52] Coercing data col types for 'wellview_Appointments' data
+INFO [2021-05-14 10:22:59] Data coerced
+INFO [2021-05-14 10:22:59] Creating roll columns
+INFO [2021-05-14 10:23:00] 93.7% of wellview_Appointments records have a member in eligibility. OK.
+INFO [2021-05-14 10:23:00] Getting Wellview data from DB
+INFO [2021-05-14 10:23:01] Retrieved 14204 wellview_Labs records
+INFO [2021-05-14 10:23:01] Coercing data col types for 'wellview_Labs' data
+INFO [2021-05-14 10:23:02] Data coerced
+INFO [2021-05-14 10:23:02] Creating roll columns
+INFO [2021-05-14 10:23:04] 95.8% of wellview_Labs records have a member in eligibility. OK.
+INFO [2021-05-14 10:23:04] Getting Wellview data from DB
+INFO [2021-05-14 10:23:05] Retrieved 218649 wellview_Risks records
+INFO [2021-05-14 10:23:05] Coercing data col types for 'wellview_Risks' data
+INFO [2021-05-14 10:23:24] Data coerced
+INFO [2021-05-14 10:23:24] Creating roll columns
+INFO [2021-05-14 10:23:26] 94.6% of wellview_Risks records have a member in eligibility. OK.
+INFO [2021-05-14 10:23:26] Getting Wellview data from DB
+INFO [2021-05-14 10:23:26] Retrieved 21386 wellview_Goals records
+INFO [2021-05-14 10:23:26] Coercing data col types for 'wellview_Goals' data
+INFO [2021-05-14 10:23:28] Data coerced
+INFO [2021-05-14 10:23:28] Creating roll columns
+INFO [2021-05-14 10:23:30] 92.7% of wellview_Goals records have a member in eligibility. OK.
+INFO [2021-05-14 10:23:30] Getting Wellview data from DB
+INFO [2021-05-14 10:23:30] Retrieved 1337 wellview_Visions records
+INFO [2021-05-14 10:23:30] Coercing data col types for 'wellview_Visions' data
+INFO [2021-05-14 10:23:30] Data coerced
+INFO [2021-05-14 10:23:30] Creating roll columns
+WARN [2021-05-14 10:23:32] 7.7% of wellview_Visions records do not have a member in eligibility
+INFO [2021-05-14 10:23:32] Getting Wellview data from DB
+INFO [2021-05-14 10:23:32] Retrieved 1362 wellview_Solutions records
+INFO [2021-05-14 10:23:32] Coercing data col types for 'wellview_Solutions' data
+INFO [2021-05-14 10:23:32] Data coerced
+INFO [2021-05-14 10:23:32] Creating roll columns
+INFO [2021-05-14 10:23:34] 94.9% of wellview_Solutions records have a member in eligibility. OK.
+INFO [2021-05-14 10:23:34] Getting Wellview data from DB
+INFO [2021-05-14 10:23:34] Retrieved 38820 wellview_Steps records
+INFO [2021-05-14 10:23:34] Coercing data col types for 'wellview_Steps' data
+INFO [2021-05-14 10:23:38] Data coerced
+INFO [2021-05-14 10:23:38] Getting Wellview data from DB
+INFO [2021-05-14 10:23:38] Retrieved 116 wellview_Risk-Key records
+INFO [2021-05-14 10:23:38] Coercing data col types for 'wellview_Risk-Key' data
+INFO [2021-05-14 10:23:38] Data coerced
+INFO [2021-05-14 10:23:38] Getting Wellview data from DB
+INFO [2021-05-14 10:23:38] Retrieved 68 wellview_Providers records
+INFO [2021-05-14 10:23:38] Coercing data col types for 'wellview_Providers' data
+INFO [2021-05-14 10:23:38] Data coerced
+INFO [2021-05-14 10:23:38] Basic Wellview indicators
+INFO [2021-05-14 10:23:38] Getting data Wellview enrollment dates
+INFO [2021-05-14 10:23:39] Getting Wellview data from DB
+INFO [2021-05-14 10:23:39] Retrieved 21234 wellview_Participants records
+INFO [2021-05-14 10:23:39] Coercing data col types for 'wellview_Participants' data
+INFO [2021-05-14 10:23:40] Data coerced
+INFO [2021-05-14 10:23:40] Creating roll columns
+INFO [2021-05-14 10:23:40] Getting eligibility data from DB
+INFO [2021-05-14 10:23:43] Retrieved 250172 eligibility records
+INFO [2021-05-14 10:23:43] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 10:24:04] Data coerced
+INFO [2021-05-14 10:24:04] Creating roll columns
+INFO [2021-05-14 10:24:04] Getting SSN lookup
+INFO [2021-05-14 10:24:05] Encrypting SSN
+INFO [2021-05-14 10:24:19] 94.5% of wellview_Participants records have a member in eligibility. OK.
+INFO [2021-05-14 10:24:23] Steps
+INFO [2021-05-14 10:24:23] Getting text-mined variables
+INFO [2021-05-14 10:24:23] TMV: Bag of words
+INFO [2021-05-14 10:24:42] Stripping whitespace
+INFO [2021-05-14 10:24:43] Removing numbers
+INFO [2021-05-14 10:24:43] Converting to lower case
+INFO [2021-05-14 10:24:44] Removing stopwords
+INFO [2021-05-14 10:24:49] Stemming words
+Loading required package: Matrix
+INFO [2021-05-14 10:24:53] TMV: Sentiment
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:29:35] Goals
+INFO [2021-05-14 10:29:42] Getting text-mined variables
+INFO [2021-05-14 10:29:42] TMV: Bag of words
+INFO [2021-05-14 10:29:52] Stripping whitespace
+INFO [2021-05-14 10:29:52] Removing numbers
+INFO [2021-05-14 10:29:53] Converting to lower case
+INFO [2021-05-14 10:29:53] Removing stopwords
+INFO [2021-05-14 10:29:57] Stemming words
+INFO [2021-05-14 10:29:58] TMV: Sentiment
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:32:34] Appointments
+INFO [2021-05-14 10:32:45] Getting text-mined variables
+INFO [2021-05-14 10:32:45] TMV: Bag of words
+INFO [2021-05-14 10:33:07] Stripping whitespace
+INFO [2021-05-14 10:33:08] Removing numbers
+INFO [2021-05-14 10:33:08] Converting to lower case
+INFO [2021-05-14 10:33:09] Removing stopwords
+INFO [2021-05-14 10:33:17] Stemming words
+INFO [2021-05-14 10:33:22] TMV: Sentiment
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:39:54] Wellview solutions
+INFO [2021-05-14 10:39:58] Wellview labs
+INFO [2021-05-14 10:40:08] Wellview interactions
+INFO [2021-05-14 10:40:12] Wellview providers
+INFO [2021-05-14 10:40:30] Wellview IV dataset created: 88486 rows and 7123 candidate independent variables
+INFO [2021-05-14 10:40:31] Executing pp_iv_case_mgmt (mem size 11748).
+INFO [2021-05-14 10:40:31] Preprocessing case management
+INFO [2021-05-14 10:40:31] Getting case management data from DB
+INFO [2021-05-14 10:40:33] Retrieved 44894 case_mgmt records
+INFO [2021-05-14 10:40:33] Coercing data col types for 'case_management' data
+INFO [2021-05-14 10:40:37] Data coerced
+INFO [2021-05-14 10:40:37] Creating roll columns
+INFO [2021-05-14 10:40:37] Getting eligibility data from DB
+INFO [2021-05-14 10:40:40] Retrieved 250172 eligibility records
+INFO [2021-05-14 10:40:40] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 10:41:00] Data coerced
+INFO [2021-05-14 10:41:00] Creating roll columns
+INFO [2021-05-14 10:41:01] Getting SSN lookup
+INFO [2021-05-14 10:41:01] Encrypting SSN
+INFO [2021-05-14 10:41:13] 97.4% of case mgmt records have a member in eligibility. OK.
+INFO [2021-05-14 10:41:14] Getting case management dates
+INFO [2021-05-14 10:41:20] Fanning out case management dates
+INFO [2021-05-14 10:41:44] Getting text-mined variables
+INFO [2021-05-14 10:41:44] TMV: Bag of words
+INFO [2021-05-14 10:42:46] Stripping whitespace
+INFO [2021-05-14 10:42:50] Removing numbers
+INFO [2021-05-14 10:42:51] Converting to lower case
+INFO [2021-05-14 10:42:52] Removing stopwords
+INFO [2021-05-14 10:43:48] Stemming words
+INFO [2021-05-14 10:44:06] TMV: Sentiment
+  |===============================================================================================================| 100%
+INFO [2021-05-14 10:56:31] Case management IV dataset created: 88486 rows and 7320 candidate independent variables
+INFO [2021-05-14 10:56:33] Executing pp_iv_eligibility (mem size 16744).
+INFO [2021-05-14 10:56:33] Preprocessing eligibility
+INFO [2021-05-14 10:56:33] Getting eligibility data from DB
+INFO [2021-05-14 10:56:37] Retrieved 250172 eligibility records
+INFO [2021-05-14 10:56:37] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 10:56:58] Data coerced
+INFO [2021-05-14 10:56:58] Creating roll columns
+INFO [2021-05-14 10:56:59] Getting SSN lookup
+INFO [2021-05-14 10:57:00] Encrypting SSN
+INFO [2021-05-14 10:57:09] Getting eligibility plan description
+INFO [2021-05-14 10:57:10] Returning eligibility with plan description column
+INFO [2021-05-14 10:57:10] Preprocessing eligibility: zip code and state
+INFO [2021-05-14 10:57:11] Preprocessing eligibility: month and season
+INFO [2021-05-14 10:57:12] Preprocessing eligibility: area statistics
+[1] "v_CountyPopulation"
+[1] "v_CountyHealthSocialCount"
+[1] "v_ZipHealthSocialCount"
+[1] "v_CountyWeeklyWage"
+[1] "v_CountyUnemploymentPct"
+INFO [2021-05-14 11:08:16] Preprocessing eligibility: plan type
+INFO [2021-05-14 11:08:22] Eligibility IV dataset created: 88486 rows and 31 candidate independent variables
+INFO [2021-05-14 11:08:22] Executing pp_iv_precert (mem size 16768).
+INFO [2021-05-14 11:08:22] Preprocessing precert data
+INFO [2021-05-14 11:08:22] Getting precert data from DB
+INFO [2021-05-14 11:08:23] Retrieved 37382 precert records
+INFO [2021-05-14 11:08:23] Coercing data col types for 'precert_subscriber' data
+INFO [2021-05-14 11:08:24] Data coerced
+INFO [2021-05-14 11:08:24] Getting precert data from DB
+INFO [2021-05-14 11:08:25] Retrieved 37382 precert records
+INFO [2021-05-14 11:08:25] Coercing data col types for 'precert_patient' data
+INFO [2021-05-14 11:08:26] Data coerced
+INFO [2021-05-14 11:08:26] Getting precert data from DB
+INFO [2021-05-14 11:08:26] Retrieved 37382 precert records
+INFO [2021-05-14 11:08:26] Coercing data col types for 'precert_case' data
+INFO [2021-05-14 11:08:29] Data coerced
+INFO [2021-05-14 11:08:29] Getting precert data from DB
+INFO [2021-05-14 11:08:29] Retrieved 37382 precert records
+INFO [2021-05-14 11:08:29] Coercing data col types for 'precert_service' data
+INFO [2021-05-14 11:08:32] Data coerced
+INFO [2021-05-14 11:08:32] Getting precert data from DB
+INFO [2021-05-14 11:08:32] Retrieved 63294 precert records
+INFO [2021-05-14 11:08:32] Coercing data col types for 'precert_diagnosis' data
+INFO [2021-05-14 11:08:34] Data coerced
+INFO [2021-05-14 11:08:34] Getting precert data from DB
+INFO [2021-05-14 11:08:35] Retrieved 77733 precert records
+INFO [2021-05-14 11:08:35] Coercing data col types for 'precert_authorization_detail' data
+INFO [2021-05-14 11:08:40] Data coerced
+INFO [2021-05-14 11:08:40] Getting precert data from DB
+INFO [2021-05-14 11:08:40] Retrieved 33874 precert records
+INFO [2021-05-14 11:08:40] Coercing data col types for 'precert_provider' data
+INFO [2021-05-14 11:08:41] Data coerced
+INFO [2021-05-14 11:08:41] Getting precert data from DB
+INFO [2021-05-14 11:08:41] Retrieved 32070 precert records
+INFO [2021-05-14 11:08:41] Coercing data col types for 'precert_facility' data
+INFO [2021-05-14 11:08:42] Data coerced
+INFO [2021-05-14 11:08:42] Getting precert data from DB
+INFO [2021-05-14 11:08:43] Retrieved 34884 precert records
+INFO [2021-05-14 11:08:43] Coercing data col types for 'precert_date_detail' data
+INFO [2021-05-14 11:08:45] Data coerced
+INFO [2021-05-14 11:08:45] Getting eligibility data from DB
+INFO [2021-05-14 11:08:48] Retrieved 250172 eligibility records
+INFO [2021-05-14 11:08:48] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 11:09:08] Data coerced
+INFO [2021-05-14 11:09:08] Creating roll columns
+INFO [2021-05-14 11:09:09] Getting SSN lookup
+INFO [2021-05-14 11:09:10] Encrypting SSN
+INFO [2021-05-14 11:09:31] Precert IV dataset created: 88486 rows and 81 candidate independent variables
+INFO [2021-05-14 11:09:32] Executing pp_iv_experian (mem size 16841).
+INFO [2021-05-14 11:09:32] Preprocessing Experian data
+INFO [2021-05-14 11:09:32] Getting Experian data from DB
+INFO [2021-05-14 11:09:53] Retrieved 75729 Experian records
+INFO [2021-05-14 11:09:54] Getting eligibility data from DB
+INFO [2021-05-14 11:09:57] Retrieved 250172 eligibility records
+INFO [2021-05-14 11:09:57] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 11:10:18] Data coerced
+INFO [2021-05-14 11:10:18] Creating roll columns
+INFO [2021-05-14 11:10:18] Getting SSN lookup
+INFO [2021-05-14 11:10:19] Encrypting SSN
+INFO [2021-05-14 11:11:04] Case management IV dataset created: 88486 rows and 580 candidate independent variables
+INFO [2021-05-14 11:11:05] Executing pp_iv_provider (mem size 17075).
+INFO [2021-05-14 11:11:05] Preprocessing trailing provider data
+INFO [2021-05-14 11:11:05] Getting med claim data from DB
+INFO [2021-05-14 11:13:03] Retrieved 3139370 med claim records
+INFO [2021-05-14 11:13:03] Coercing data col types for 'med claim' data
+INFO [2021-05-14 11:18:11] Data coerced
+INFO [2021-05-14 11:18:11] Getting AS400 med claim data from DB
+INFO [2021-05-14 11:18:51] Retrieved 905504 AS400 med claim records
+INFO [2021-05-14 11:18:51] Adding descriptions for diagnoses and procedures
+INFO [2021-05-14 11:19:03] Adding NA column Batch_Number to AS400 claims
+INFO [2021-05-14 11:19:03] Adding NA column Batch_Claim to AS400 claims
+INFO [2021-05-14 11:19:03] Adding NA column Claim_Service_Date to AS400 claims
+INFO [2021-05-14 11:19:04] Adding NA column Diagnostic_Code_Type to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column COB_Amt to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Co_Pay_Amt to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Co_Ins_Amt to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Deductible_Amt to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Not_Covered_Amt to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Modifier_2 to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Modifier_3 to AS400 claims
+INFO [2021-05-14 11:19:08] Adding NA column Modifier_4 to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Check_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Check_Batch to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Check_Batch_Date to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Check_Number to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Unique_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Federal_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column PlanType_Description to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Request_Date to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Adjustment_Claim to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Refund_Claim to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Subscriber_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Member_Seq to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Group_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Group_Name to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Division_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Division_Name to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column Network_ID to AS400 claims
+INFO [2021-05-14 11:19:11] Adding NA column NetworkDescription to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Age_At_Report_Date to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Age_At_Service_Date to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Age_At_Paid_Date to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Place_Of_Service_Description to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Relationship_Code to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Relationship_Description to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Benefit_Code to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Provider_Type_Description to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Received_Date to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Repriced_Network_ID to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Repriced_NetworkDescription to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Ex_Code1 to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Ex_Code1_Description to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Ex_Code2 to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Ex_Code2_Description to AS400 claims
+INFO [2021-05-14 11:19:14] Adding NA column Ex_Code3 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Ex_Code3_Description to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Ex_Code4 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Ex_Code4_Description to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Drug_Code to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column POA to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column NPI to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code3 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description3 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code4 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description4 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code5 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description5 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code6 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description6 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code7 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description7 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code8 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description8 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code9 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description9 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code10 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description10 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code11 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description11 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diagnostic_Code12 to AS400 claims
+INFO [2021-05-14 11:19:15] Adding NA column Diag_Description12 to AS400 claims
+INFO [2021-05-14 11:19:48] Creating roll columns
+INFO [2021-05-14 11:19:50] Getting eligibility data from DB
+INFO [2021-05-14 11:19:53] Retrieved 250172 eligibility records
+INFO [2021-05-14 11:19:53] Coercing data col types for 'eligibility' data
+INFO [2021-05-14 11:20:15] Data coerced
+INFO [2021-05-14 11:20:15] Getting SSN lookup
+INFO [2021-05-14 11:20:24] 97.2% of med claim records have a member in eligibility. OK.
+INFO [2021-05-14 11:20:24] Encrypting SSN
+INFO [2021-05-14 11:21:26] Matching column names to original med_claim db
+INFO [2021-05-14 11:29:08] Rolling chunked provider metrics
+INFO [2021-05-14 11:32:29] Completed 1 of 1 chunks
+INFO [2021-05-14 11:32:30] Provider metric IV dataset created: 88486 rows and 9 candidate independent variables
+INFO [2021-05-14 11:32:44] Executing pp_iv_temporal (mem size 17397).
+INFO [2021-05-14 11:32:44] Preprocessing temporal data
+INFO [2021-05-14 11:32:44] WHO flu data
+INFO [2021-05-14 11:32:44] Getting WHO flu data from database
+INFO [2021-05-14 11:32:56] Temporal IV dataset created: 88486 rows and 15 candidate independent variables
+INFO [2021-05-14 11:32:58] Binding IV's
+INFO [2021-05-14 11:32:58] iCbindTo pp_iv_med_claim
+INFO [2021-05-14 11:33:08] 5931 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:33:08] iCbindTo pp_iv_dental_claim
+INFO [2021-05-14 11:33:08] 6355 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:33:08] iCbindTo pp_iv_rx
+INFO [2021-05-14 11:33:22] 11826 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:33:22] iCbindTo pp_iv_wellview
+INFO [2021-05-14 11:33:47] 18949 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:33:47] iCbindTo pp_iv_case_mgmt
+INFO [2021-05-14 11:34:21] 26269 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:34:21] iCbindTo pp_iv_eligibility
+INFO [2021-05-14 11:34:21] 26300 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:34:21] iCbindTo pp_iv_precert
+INFO [2021-05-14 11:34:21] 26381 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:34:21] iCbindTo pp_iv_experian
+INFO [2021-05-14 11:34:23] 26961 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:34:24] iCbindTo pp_iv_provider
+INFO [2021-05-14 11:34:24] 26970 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:34:24] iCbindTo pp_iv_temporal
+INFO [2021-05-14 11:34:24] 26985 variables in IV dataset so far (2 dups overwritten)
+INFO [2021-05-14 11:34:24] 26985 total variables in IV dataset
+INFO [2021-05-14 11:34:24] iv number of rows: 88486
+INFO [2021-05-14 11:34:24] iv number of columns: 26985
+INFO [2021-05-14 11:34:24] iv unique person_ids: 17813
+INFO [2021-05-14 11:34:24] iv min sample_date: 2021-01-01
+INFO [2021-05-14 11:34:24] iv max sample_date: 2021-02-22
+INFO [2021-05-14 11:34:24] Preprocessing complete
+```
+
+You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+
+Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+par(mar = c(4, 4, .1, .1))
+plot(pressure, type = 'b', pch = 19)
+```
+
+Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+
+```{r nice-tab, tidy=FALSE}
+knitr::kable(
+  head(iris, 20), caption = 'Here is a nice table!',
+  booktabs = TRUE
+)
+```
+
+

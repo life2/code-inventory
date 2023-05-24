@@ -1,0 +1,79 @@
+# HL7 {#hl7}
+
+This document is intended to catalog and document all of the code for HL7 as well as how to use it.
+
+## Project Structure
+
+```{r struct_hl7, echo=FALSE, comment=""}
+main_dir <- "C:/Users/Derek/Desktop/HL7"
+library(fs)
+dir_tree(main_dir, recurse = 1)
+```
+
+## Notes / Questions
+
+- Notes
+- Questions
+
+
+## `R` Code
+
+```{r r_code_hl7, warning=FALSE, results='asis', echo=FALSE}
+library(roxygen2)
+library(stringr)
+
+r_folder_name <- "r"
+
+r_dir <- file.path(main_dir, r_folder_name)
+
+load_order <- c("/r", "/r/conversion", "/r/dao", "/r/reports")
+
+blocks_to_drop <- c("/r/sandbox")
+
+# get parsed source into roxygen-friendly format
+env <- new.env(parent = globalenv())
+all_files <- list.files(r_dir, full.names = TRUE, recursive = TRUE, pattern = "[.]R")
+block_names <- dirname(gsub(main_dir, "", all_files, fixed = TRUE))
+blocks_to_drop <- block_names %in% blocks_to_drop
+all_files <- all_files[!blocks_to_drop]
+block_names <- block_names[!blocks_to_drop]
+
+block_order <- sapply(block_names, function(x) which(load_order %in% x))
+block_order <- order(block_order, all_files)
+
+all_files <- all_files[block_order]
+block_names <- block_names[block_order]
+
+get_functions <- function(source_file, source_env = env) {
+  
+  blocks <- roxygen2::parse_file(source_file, source_env)
+  
+  get_title <- function(x) {
+    tags <- sapply(x[["tags"]], "[[", "tag")
+    call <- paste0("`", x[["call"]][2], "()` - ")
+    has_title <- which(tags == "title")
+    description <- ifelse(length(has_title),
+                          x[["tags"]][[has_title]][["raw"]],
+                          "")
+    description <- str_squish(str_replace_all(description, "\n", " "))
+    paste0(call, description)
+  }
+  
+  sapply(blocks, get_title)
+}
+
+all_functions <- sapply(all_files, get_functions)
+
+current_name <- ""
+for (i in seq_along(all_functions)) {
+  if(block_names[i] != current_name) {
+    cat(paste0("### `", block_names[i], "`"))
+    cat("\n\n")
+  }
+  current_name <- block_names[i]
+  cat(paste0("#### `", basename(all_files[i]), "`"))
+  cat("\n\n")
+  cat(paste0("- ", all_functions[[i]]), sep = "\n")
+  cat("\n\n")
+}
+```
